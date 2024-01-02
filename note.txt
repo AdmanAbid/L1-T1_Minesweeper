@@ -1,0 +1,5 @@
+add statistics
+add about
+save settings
+
+better sound for animation
