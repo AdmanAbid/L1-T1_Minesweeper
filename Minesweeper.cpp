@@ -165,6 +165,7 @@ void iSpecialKeyboard(unsigned char key) {}
 int main()
 {
     initiate();
+    getSettings();
     iInitialize(screenWidth, screenHeight, "Minesweeper");
     return 0;
 }

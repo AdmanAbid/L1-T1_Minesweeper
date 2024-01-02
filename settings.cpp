@@ -23,6 +23,12 @@ enum _gameState
 };
 _gameState gameState = MAIN_MENU;
 
+struct settingsVariables
+{
+    int theme_;
+    bool music_, autoChord_, animation_;
+} savedSettings;
+
 enum _cellState
 {
     DEFAULT,
@@ -246,9 +252,9 @@ int _time = 0;
 char str[50];
 
 int theme = 1;
-bool music = true;
+bool music = false;
 bool animation = false;
-bool autoChord = true;
+bool autoChord = false;
 
 int queue[500];
 int front = 0, back = 0, count = 0;
@@ -256,6 +262,44 @@ int front = 0, back = 0, count = 0;
 int t1 = iSetTimer(1000, inGameTimer);
 int t2 = iSetTimer(500, bfs);
 int t3 = iSetTimer(600, winAnimation);
+
+void getSettings()
+{
+    FILE *fp = fopen("GameData.txt", "rb");
+    if (fp != NULL)
+    {
+        fread(&savedSettings, sizeof(settingsVariables), 1, fp);
+        theme = savedSettings.theme_;
+        music = savedSettings.music_;
+        animation = savedSettings.animation_;
+        autoChord = savedSettings.autoChord_;
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for reading\n");
+        exit(1);
+    }
+}
+
+void saveData()
+{
+    FILE *fp = fopen("GameData.txt", "wb");
+    if (fp != NULL)
+    {
+        savedSettings.theme_ = theme;
+        savedSettings.music_ = music;
+        savedSettings.animation_ = animation;
+        savedSettings.autoChord_ = autoChord;
+        fwrite(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for writing\n");
+        exit(1);
+    }
+}
 
 void setup(_difficulty *mode_)
 {
@@ -456,6 +500,7 @@ void deleteBoard()
 void exitGame()
 {
     playSound(7);
+    saveData();
     deleteBoard();
     if (music) Sleep(400);
     exit(0);
