@@ -8,6 +8,7 @@ void winAnimation();
 void Qpush(int n);
 int Qpop();
 int Qsize();
+void gameLost_statChange();
 
 enum _gameState
 {
@@ -29,6 +30,19 @@ struct settingsVariables
     bool music_, autoChord_, animation_;
 } savedSettings;
 
+struct score_date
+{
+    int score_;
+    char date[20];
+};
+
+struct statVariables
+{
+    int gamesPlayed, gamesWon, maxWinning, maxLosing, currentWinning, currentLosing;
+    score_date score[5];
+};
+statVariables stats[3];
+
 enum _cellState
 {
     DEFAULT,
@@ -47,7 +61,7 @@ _cell **board = NULL;
 
 struct _difficulty
 {
-    int row, col, mines, notMines, x, y, w, statNum;
+    int row, col, mines, notMines, x, y, w, statVal;
     char image[2][13][50];
 };
 _difficulty EASY, MEDIUM, HARD, mode;
@@ -63,7 +77,7 @@ void initiate()
     EASY.x = 312;
     EASY.y = 111;
     EASY.w = 64;
-    EASY.statNum = 0;
+    EASY.statVal = 0;
 
     strcpy(EASY.image[0][0], "Images/Light/flag.bmp");
     strcpy(EASY.image[0][1], "Images/Light/mine.bmp");
@@ -101,7 +115,7 @@ void initiate()
     MEDIUM.x = 312;
     MEDIUM.y = 111;
     MEDIUM.w = 36;
-    MEDIUM.statNum = 1;
+    MEDIUM.statVal = 1;
 
     strcpy(MEDIUM.image[0][0], "Images/Light/flag2.bmp");
     strcpy(MEDIUM.image[0][1], "Images/Light/mine2.bmp");
@@ -139,7 +153,7 @@ void initiate()
     HARD.x = 60;
     HARD.y = 111;
     HARD.w = 36;
-    HARD.statNum = 2;
+    HARD.statVal = 2;
 
     strcpy(HARD.image[0][0], "Images/Light/flag2.bmp");
     strcpy(HARD.image[0][1], "Images/Light/mine2.bmp");
@@ -291,7 +305,9 @@ void saveData()
         savedSettings.music_ = music;
         savedSettings.animation_ = animation;
         savedSettings.autoChord_ = autoChord;
+
         fwrite(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fwrite(stats, sizeof(statVariables), 3, fp);
         fclose(fp);
     }
     else
@@ -369,6 +385,7 @@ void leftClick_on_default(int i, int j)
         board[i][j].visited = true;
         gameState = GAME_LOST;
         canResume = false;
+        gameLost_statChange();
         if (animation) Qpush(i*30 + j);
         else playSound(3);
     }
@@ -504,4 +521,37 @@ void exitGame()
     deleteBoard();
     if (music) Sleep(400);
     exit(0);
+}
+
+void gameLost_statChange()
+{
+    FILE *fp = fopen("GameData.txt", "rb");
+    if (fp != NULL)
+    {
+        fread(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fread(stats, sizeof(statVariables), 3, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for reading in gamelost\n");
+        exit(1);
+    }
+
+    stats[mode.statVal].gamesPlayed++;
+    stats[mode.statVal].currentWinning = 0;
+    if (++stats[mode.statVal].currentLosing > stats[mode.statVal].maxLosing) stats[mode.statVal].maxLosing++;
+
+    fp = fopen("GameData.txt", "wb");
+    if (fp != NULL)
+    {
+        fwrite(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fwrite(stats, sizeof(statVariables), 3, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for writing in gamelost\n");
+        exit(1);
+    }
 }
