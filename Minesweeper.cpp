@@ -147,6 +147,7 @@ void iMouse(int button, int state, int mx, int my)
 
     case IN_GAME:
         if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = (canResume ? RESUME_MENU : MAIN_MENU), playSound(7);
+        else if (firstClick) safeFirstClick(mx, my, leftClick, rightClick);
         else simulate(mx, my, leftClick, rightClick);
         break;
 
@@ -156,7 +157,6 @@ void iMouse(int button, int state, int mx, int my)
         break;
     }
 }
-
 
 void iMouseMove(int mx, int my) {}
 void iKeyboard(unsigned char key) {}

@@ -3,3 +3,4 @@ add about
 save settings
 
 better sound for animation
+add first click not mine

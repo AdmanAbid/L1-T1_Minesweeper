@@ -271,6 +271,7 @@ bool animation = false;
 bool autoChord = false;
 
 int queue[500];
+bool firstClick = false;
 int front = 0, back = 0, count = 0;
 
 int t1 = iSetTimer(1000, inGameTimer);
@@ -326,6 +327,7 @@ void setup(_difficulty *mode_)
     flagged = 0, exposed = 0;
     front = 0, back = 0;
     count = mode.row;
+    firstClick = true;
 
     deleteBoard();
 	board = (_cell **)malloc(mode.row * sizeof(_cell *));
@@ -512,6 +514,23 @@ void deleteBoard()
         free(board);
         board = NULL;
     }
+}
+
+void safeFirstClick(int mx, int my, bool leftClick, bool rightClick)
+{
+    int i = (mx - mode.x) / mode.w, j = (my - mode.y) / mode.w;
+    if (i >= 0 && i < mode.row && j >= 0 && j < mode.col && (leftClick || rightClick))
+    {
+        firstClick = false;
+        if (leftClick && board[i][j].isMine)
+        {
+            int t = 0;
+            while (board[t][mode.col-1].isMine && t < mode.row) t++;
+            board[t][mode.col-1].isMine = true;
+            board[i][j].isMine = false;
+        }
+    }
+    simulate(mx, my, leftClick, rightClick);
 }
 
 void exitGame()
