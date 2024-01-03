@@ -36,5 +36,5 @@ int main()
         return 1;
     }
 
-    for (int i = 0; i < 5; i++) printf("%d ", stats[0].score[i].score_);
+    for (int i = 0; i < 5; i++) printf("%03d   %s\n", stats[0].score[i].score_, stats[0].score[i].date_);
 }

@@ -10,6 +10,7 @@ int Qpop();
 int Qsize();
 void gameLost_statChange();
 void gameWon_statChange();
+void resetStat(int n);
 
 enum _gameState
 {
@@ -468,7 +469,7 @@ void gameWon_statChange()
     }
     else
     {
-        printf("Error opening file for reading in gamelost\n");
+        printf("Error opening file for reading in gamewon\n");
         exit(1);
     }
 
@@ -479,11 +480,11 @@ void gameWon_statChange()
     int i;
     for (i = 0; i < 5; i++)
         if (_time < stats[mode.statVal].score[i].score_) break;
-    
+
     if (i < 5)
     {
         isRecord = true;
-        for (int j = 3; j >= i; j++) stats[mode.statVal].score[j+1] = stats[mode.statVal].score[j];
+        for (int j = 3; j >= i; j--) stats[mode.statVal].score[j+1] = stats[mode.statVal].score[j];
         stats[mode.statVal].score[i].score_ = _time;
 
         time_t time2; time(&time2);
@@ -502,10 +503,33 @@ void gameWon_statChange()
     }
     else
     {
-        printf("Error opening file for writing in gamelost\n");
+        printf("Error opening file for writing in gamewon\n");
         exit(1);
     }
-    printf("game win stat change\n");
+}
+
+void resetStat(int n)
+{
+    stats[n].gamesPlayed = 0;
+    stats[n].gamesWon = 0;
+    stats[n].currentWinning = 0;
+    stats[n].currentLosing = 0;
+    stats[n].maxWinning = 0;
+    stats[n].maxLosing = 0;
+    for (int i = 0; i < 5; i++) stats[n].score[i].score_ = __INT_MAX__;
+
+    FILE *fp = fopen("GameData.txt", "wb");
+    if (fp != NULL)
+    {
+        fwrite(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fwrite(stats, sizeof(statVariables), 3, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for writing in resetStat\n");
+        exit(1);
+    }
 }
 
 void playSound(int n)
@@ -586,7 +610,7 @@ void safeFirstClick(int mx, int my, bool leftClick, bool rightClick)
                 int I = t + di[k], J = mode.col-1 + dj[k];
                 if (I >= 0 && I < mode.row && J >= 0 && J < mode.col) board[I][J].num++;
             }
-            
+
             board[i][j].isMine = false;
             for (int k = 0; k < 8; k++)
             {

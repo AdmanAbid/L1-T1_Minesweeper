@@ -3,6 +3,5 @@ add about
 add better sound for animation
 
 adding statistics
-need to add reset
-fixed safeFirstClick bug
-added gameWon_statChange (not tested yet)
+added reset
+fixed gameWon_statChange
