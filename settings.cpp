@@ -10,7 +10,7 @@ int Qpop();
 int Qsize();
 void gameLost_statChange();
 void gameWon_statChange();
-void resetStat(int n);
+void resetStat();
 
 enum _gameState
 {
@@ -67,7 +67,7 @@ struct _difficulty
     char image[2][13][50];
 };
 _difficulty EASY, MEDIUM, HARD, mode;
-char IMAGE[2][26][50];
+char IMAGE[2][30][50];
 char SOUND[10][50];
 
 void initiate()
@@ -210,6 +210,10 @@ void initiate()
     strcpy(IMAGE[0][21], "Images/Light/off.bmp");
     strcpy(IMAGE[0][22], "Images/Light/click.bmp");
     strcpy(IMAGE[0][23], "Images/Light/auto.bmp");
+    strcpy(IMAGE[0][24], "Images/Light/statscreen.bmp");
+    strcpy(IMAGE[0][25], "Images/Light/stateasy.bmp");
+    strcpy(IMAGE[0][26], "Images/Light/statmedium.bmp");
+    strcpy(IMAGE[0][27], "Images/Light/stathard.bmp");
 
     strcpy(IMAGE[1][0], "Images/Dark/background.bmp");
     strcpy(IMAGE[1][1], "Images/Dark/resume.bmp");
@@ -235,6 +239,10 @@ void initiate()
     strcpy(IMAGE[1][21], "Images/Dark/off.bmp");
     strcpy(IMAGE[1][22], "Images/Dark/click.bmp");
     strcpy(IMAGE[1][23], "Images/Dark/auto.bmp");
+    strcpy(IMAGE[1][24], "Images/Dark/statscreen.bmp");
+    strcpy(IMAGE[1][25], "Images/Dark/stateasy.bmp");
+    strcpy(IMAGE[1][26], "Images/Dark/statmedium.bmp");
+    strcpy(IMAGE[1][27], "Images/Dark/stathard.bmp");
 
 
     strcpy(SOUND[0], "Sounds/Chord.wav");
@@ -254,9 +262,11 @@ const int newGameY = 490, resumeY = 570;
 const int homeX = 574, homeY = 5, homeW = 52;
 const int ywinX = 450, ywinY = 690;
 const int yloseX = 450, yloseY = 690;
-const int statX = 450, statY = 550, statW = 45;
 const int winX = 460, winY = 693;
-const int resetX = 450, resetY = 100, resetH = 100, resetW = 300;
+const int resetX = 540, resetY = 150;
+const int statX = 540, statY = 600, statH = 50, statW = 120, statP = 20;
+const int stat2X = 1030, stat2Y = 498, stat2P = 45;
+const int stat3X = 128, stat3Y = 452, stat3P = 45;
 const int setX = 325, setX2 = 725, setY = 520, setP = 10, setH = 50, setW = 150;
 
 int di[] = {1, 1, 1, -1, -1, -1, 0, 0};
@@ -264,7 +274,7 @@ int dj[] = {0, 1, -1, 0, 1, -1, 1, -1};
 
 int flagged = 0, exposed = 0;
 bool isRecord = false, canResume = false;
-int _time = 0;
+int _time = 0, curStat = 0;
 char str[50];
 
 int theme = 1;
@@ -474,6 +484,7 @@ void gameWon_statChange()
     }
 
     stats[mode.statVal].gamesPlayed++;
+    stats[mode.statVal].gamesWon++;
     stats[mode.statVal].currentLosing = 0;
     if (++stats[mode.statVal].currentWinning > stats[mode.statVal].maxWinning) stats[mode.statVal].maxWinning++;
 
@@ -508,15 +519,15 @@ void gameWon_statChange()
     }
 }
 
-void resetStat(int n)
+void resetStat()
 {
-    stats[n].gamesPlayed = 0;
-    stats[n].gamesWon = 0;
-    stats[n].currentWinning = 0;
-    stats[n].currentLosing = 0;
-    stats[n].maxWinning = 0;
-    stats[n].maxLosing = 0;
-    for (int i = 0; i < 5; i++) stats[n].score[i].score_ = __INT_MAX__;
+    stats[curStat].gamesPlayed = 0;
+    stats[curStat].gamesWon = 0;
+    stats[curStat].currentWinning = 0;
+    stats[curStat].currentLosing = 0;
+    stats[curStat].maxWinning = 0;
+    stats[curStat].maxLosing = 0;
+    for (int i = 0; i < 5; i++) stats[curStat].score[i].score_ = __INT_MAX__;
 
     FILE *fp = fopen("GameData.txt", "wb");
     if (fp != NULL)
@@ -660,6 +671,22 @@ void gameLost_statChange()
     else
     {
         printf("Error opening file for writing in gamelost\n");
+        exit(1);
+    }
+}
+
+void getStat()
+{
+    FILE *fp = fopen("GameData.txt", "rb");
+    if (fp != NULL)
+    {
+        fread(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fread(stats, sizeof(statVariables), 3, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for reading in getStat\n");
         exit(1);
     }
 }

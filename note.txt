@@ -1,7 +1,4 @@
-add statistics
 add about
 add better sound for animation
 
-adding statistics
-added reset
-fixed gameWon_statChange
+added statistics
