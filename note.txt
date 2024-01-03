@@ -1,4 +1,0 @@
-add about
-add better sound for animation
-
-added statistics
