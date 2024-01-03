@@ -11,7 +11,7 @@ struct settingsVariables
 struct score_date
 {
     int score_;
-    char date[20];
+    char date_[20];
 };
 
 struct statVariables
@@ -36,9 +36,5 @@ int main()
         return 1;
     }
 
-    printf("Games Played: %d\n", stats[0].gamesPlayed);
-    printf("Games Played: %d\n", stats[1].gamesPlayed);
-    printf("Games Played: %d\n", stats[2].gamesPlayed);
+    for (int i = 0; i < 5; i++) printf("%d ", stats[0].score[i].score_);
 }
-
-// it always fails to open the file, why?

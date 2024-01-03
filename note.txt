@@ -1,6 +1,8 @@
 add statistics
 add about
-save settings
+add better sound for animation
 
-better sound for animation
-add first click not mine
+adding statistics
+need to add reset
+fixed safeFirstClick bug
+added gameWon_statChange (not tested yet)

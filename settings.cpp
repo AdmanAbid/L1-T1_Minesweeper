@@ -9,6 +9,7 @@ void Qpush(int n);
 int Qpop();
 int Qsize();
 void gameLost_statChange();
+void gameWon_statChange();
 
 enum _gameState
 {
@@ -33,7 +34,7 @@ struct settingsVariables
 struct score_date
 {
     int score_;
-    char date[20];
+    char date_[20];
 };
 
 struct statVariables
@@ -450,9 +451,61 @@ void simulate(int mx, int my, bool leftClick, bool rightClick)
     if (exposed == mode.notMines)
     {
         playSound(8);
+        gameWon_statChange();
         gameState = GAME_WON;
         canResume = false;
     }
+}
+
+void gameWon_statChange()
+{
+    FILE *fp = fopen("GameData.txt", "rb");
+    if (fp != NULL)
+    {
+        fread(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fread(stats, sizeof(statVariables), 3, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for reading in gamelost\n");
+        exit(1);
+    }
+
+    stats[mode.statVal].gamesPlayed++;
+    stats[mode.statVal].currentLosing = 0;
+    if (++stats[mode.statVal].currentWinning > stats[mode.statVal].maxWinning) stats[mode.statVal].maxWinning++;
+
+    int i;
+    for (i = 0; i < 5; i++)
+        if (_time < stats[mode.statVal].score[i].score_) break;
+    
+    if (i < 5)
+    {
+        isRecord = true;
+        for (int j = 3; j >= i; j++) stats[mode.statVal].score[j+1] = stats[mode.statVal].score[j];
+        stats[mode.statVal].score[i].score_ = _time;
+
+        time_t time2; time(&time2);
+        tm *time3 = localtime(&time2);
+        char date[20];
+        sprintf(date, "%02d-%02d-%d", time3->tm_mday, time3->tm_mon+1, time3->tm_year+1900);
+        strcpy(stats[mode.statVal].score[i].date_, date);
+    }
+
+    fp = fopen("GameData.txt", "wb");
+    if (fp != NULL)
+    {
+        fwrite(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fwrite(stats, sizeof(statVariables), 3, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for writing in gamelost\n");
+        exit(1);
+    }
+    printf("game win stat change\n");
 }
 
 void playSound(int n)
@@ -526,8 +579,20 @@ void safeFirstClick(int mx, int my, bool leftClick, bool rightClick)
         {
             int t = 0;
             while (board[t][mode.col-1].isMine && t < mode.row) t++;
+
             board[t][mode.col-1].isMine = true;
+            for (int k = 0; k < 8; k++)
+            {
+                int I = t + di[k], J = mode.col-1 + dj[k];
+                if (I >= 0 && I < mode.row && J >= 0 && J < mode.col) board[I][J].num++;
+            }
+            
             board[i][j].isMine = false;
+            for (int k = 0; k < 8; k++)
+            {
+                int I = i + di[k], J = j + dj[k];
+                if (I >= 0 && I < mode.row && J >= 0 && J < mode.col) board[I][J].num--;
+            }
         }
     }
     simulate(mx, my, leftClick, rightClick);

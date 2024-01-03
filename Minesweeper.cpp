@@ -2,6 +2,7 @@
 #include "settings.cpp"
 
 void printText();
+void printText2();
 void showNum(int i, int j);
 
 void iDraw()
@@ -78,6 +79,7 @@ void iDraw()
     case GAME_WON:
         iShowBMP(0, 0, IMAGE[theme][0]); //background
         iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+        printText2();
         for (int i = 0; i < mode.row; i++){
             for (int j = 0; j < mode.col; j++){
                 if (board[i][j].isMine)
@@ -211,6 +213,15 @@ void printText()
 
     sprintf(str, "Mine: %d", mode.mines-flagged);
     iText(130, 710, str, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    sprintf(str, "Time: %d", _time);
+    iText(1025, 710, str, GLUT_BITMAP_TIMES_ROMAN_24);
+}
+
+void printText2()
+{
+    if (theme == 0) iSetColor(0, 0, 255);
+    else iSetColor(255, 255, 255);
 
     sprintf(str, "Time: %d", _time);
     iText(1025, 710, str, GLUT_BITMAP_TIMES_ROMAN_24);
