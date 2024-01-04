@@ -19,7 +19,7 @@ enum _gameState
     NEW_GAME,
     SETTINGS,
     STATISTICS,
-    HELP,
+    ABOUT,
     IN_GAME,
     GAME_WON,
     GAME_LOST,
@@ -214,6 +214,7 @@ void initiate()
     strcpy(IMAGE[0][25], "Images/Light/stateasy.bmp");
     strcpy(IMAGE[0][26], "Images/Light/statmedium.bmp");
     strcpy(IMAGE[0][27], "Images/Light/stathard.bmp");
+    strcpy(IMAGE[0][28], "Images/Light/aboutscreen.bmp");
 
     strcpy(IMAGE[1][0], "Images/Dark/background.bmp");
     strcpy(IMAGE[1][1], "Images/Dark/resume.bmp");
@@ -243,6 +244,7 @@ void initiate()
     strcpy(IMAGE[1][25], "Images/Dark/stateasy.bmp");
     strcpy(IMAGE[1][26], "Images/Dark/statmedium.bmp");
     strcpy(IMAGE[1][27], "Images/Dark/stathard.bmp");
+    strcpy(IMAGE[1][28], "Images/Dark/aboutscreen.bmp");
 
 
     strcpy(SOUND[0], "Sounds/Chord.wav");

@@ -73,6 +73,11 @@ void iDraw()
         iShowBMP(statX+statW+statP, statY, IMAGE[theme][27]); //statHard
         showStat();
         break;
+
+    case ABOUT:
+        iShowBMP(0, 0, IMAGE[theme][28]); //aboutScreen
+        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+        break;
     
     case IN_GAME:
         iShowBMP(0, 0, IMAGE[theme][0]); //background
@@ -134,6 +139,7 @@ void iMouse(int button, int state, int mx, int my)
         if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY && my > menuY-menuH) gameState = NEW_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-menuH-menuP && my > menuY-2*menuH-menuP) gameState = SETTINGS, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-2*menuH-2*menuP && my > menuY-3*menuH-2*menuP) getStat(), gameState = STATISTICS, playSound(7);
+        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-3*menuH-3*menuP && my > menuY-4*menuH-3*menuP) gameState = ABOUT, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-4*menuH-4*menuP && my > menuY-5*menuH-4*menuP) exitGame();
         break;
 
@@ -142,6 +148,7 @@ void iMouse(int button, int state, int mx, int my)
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-menuH-menuP && my > resumeY-2*menuH-menuP) gameState = NEW_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-2*menuH-2*menuP && my > resumeY-3*menuH-2*menuP) gameState = SETTINGS, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-3*menuH-3*menuP && my > resumeY-4*menuH-3*menuP) getStat(), gameState = STATISTICS, playSound(7);
+        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-4*menuH-4*menuP && my > resumeY-5*menuH-4*menuP) gameState = ABOUT, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-5*menuH-5*menuP && my > resumeY-6*menuH-5*menuP) exitGame();
         break;
 
@@ -159,6 +166,10 @@ void iMouse(int button, int state, int mx, int my)
         else if (leftClick && mx > statX && mx < statX+statW && my > statY && my < statY+statH) curStat = 1, playSound(7);
         else if (leftClick && mx > statX-statW-statP && mx < statX-statP && my > statY && my < statY+statH) curStat = 0, playSound(7);
         else if (leftClick && mx > statX+statW+statP && mx < statX+2*statW+statP && my > statY && my < statY+statH) curStat = 2, playSound(7);
+        break;
+
+    case ABOUT:
+        if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = (canResume ? RESUME_MENU : MAIN_MENU), playSound(7);
         break;
     
     case NEW_GAME:
@@ -276,6 +287,12 @@ void showStat()
     {
         if (stats[curStat].score[t].score_ == __INT_MAX__) break;
         sprintf(str, "%03d %30s", stats[curStat].score[t].score_, stats[curStat].score[t].date_);
+        iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
+    }
+
+    for (; t < 5; t++)
+    {
+        sprintf(str, "---                 ------------");
         iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
     }
 }
