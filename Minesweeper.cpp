@@ -1,5 +1,6 @@
 #include "iGraphics.h"
-#include "settings.cpp"
+#include "Settings.cpp"
+#include "Functions.cpp"
 
 void showStat();
 void printText();
