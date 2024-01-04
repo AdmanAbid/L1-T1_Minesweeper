@@ -33,11 +33,11 @@ void iDraw()
 
     case RESUME_MENU:
         iShowBMP(0, 0, IMAGE[theme][0]); //background
-        iShowBMP(menuX, resumeY - menuH, IMAGE[theme][1]); //newgame
-        iShowBMP(menuX, resumeY - 2*menuH - menuP, IMAGE[theme][2]); //settings
-        iShowBMP(menuX, resumeY - 3*menuH - 2*menuP, IMAGE[theme][3]); //stats
-        iShowBMP(menuX, resumeY - 4*menuH - 3*menuP, IMAGE[theme][4]); //about
-        iShowBMP(menuX, resumeY - 5*menuH - 4*menuP, IMAGE[theme][5]); //exit
+        iShowBMP(menuX, resumeY - menuH, IMAGE[theme][1]); //resume
+        iShowBMP(menuX, resumeY - 2*menuH - menuP, IMAGE[theme][2]); //newgame
+        iShowBMP(menuX, resumeY - 3*menuH - 2*menuP, IMAGE[theme][3]); //settings
+        iShowBMP(menuX, resumeY - 4*menuH - 3*menuP, IMAGE[theme][4]); //stats
+        iShowBMP(menuX, resumeY - 5*menuH - 4*menuP, IMAGE[theme][5]); //about
         iShowBMP(menuX, resumeY - 6*menuH - 5*menuP, IMAGE[theme][6]); //exit
         break;
 
@@ -85,8 +85,8 @@ void iDraw()
         iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
         for (int i = 0; i < mode.col; i++){
             for (int j = 0; j < mode.row; j++){
-                if (board[i][j].state == DEFAULT) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]);
-                else if (board[i][j].state == FLAGGED) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]);
+                if (board[i][j].state == DEFAULT) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]); //blank
+                else if (board[i][j].state == FLAGGED) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]); //flag
                 else if (board[i][j].state == EXPOSED) showNum(i, j);
             }
         }
@@ -108,21 +108,21 @@ void iDraw()
                 else showNum(i, j);
             }
         }
-        if (isRecord) iShowBMP(winX, winY, IMAGE[theme][12]);
-        else iShowBMP(winX, winY, IMAGE[theme][10]);
+        if (isRecord) iShowBMP(winX, winY, IMAGE[theme][12]); //newrecord
+        else iShowBMP(winX, winY, IMAGE[theme][10]); //youwin
         break;
 
     case GAME_LOST:
         iShowBMP(0, 0, IMAGE[theme][0]); //background
         iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        iShowBMP(winX, winY, IMAGE[theme][11]);
+        iShowBMP(winX, winY, IMAGE[theme][11]); //youlose
         for (int i = 0; i < mode.col; i++){
             for (int j = 0; j < mode.row; j++){
                 if (board[i][j].isMine && board[i][j].visited) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][2]); //exmine
                 else if (board[i][j].isMine && !board[i][j].visited) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); //mine
-                else if (board[i][j].state == FLAGGED) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]);
+                else if (board[i][j].state == FLAGGED) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]); //flag
                 else if (board[i][j].state == EXPOSED) showNum(i, j);
-                else iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]);
+                else iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]); //blank
             }
         }
         break;

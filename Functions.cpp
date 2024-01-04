@@ -341,7 +341,7 @@ void playSound(int n)
         PlaySound(0, 0, 0);
         PlaySound(SOUND[n], NULL, SND_ASYNC);
     }
-    if (n == 7) Sleep(100);
+    if (n == 7) Sleep(100); //for better transition between screens
 }
 
 void deleteBoard()
@@ -359,6 +359,6 @@ void exitGame()
     playSound(7);
     deleteBoard();
     saveSettings();
-    if (music) Sleep(400);
+    if (music) Sleep(400); //to play exit sound
     exit(0);
 }

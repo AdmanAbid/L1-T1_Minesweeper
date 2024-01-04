@@ -4,7 +4,6 @@ void bfs();
 void inGameTimer();
 void winAnimation();
 
-
 enum _gameState
 {
     MAIN_MENU,
@@ -51,8 +50,8 @@ enum _cellState
 
 struct _cell
 {
-    bool isMine, visited;
     int num;
+    bool isMine, visited;
     _cellState state;
 };
 _cell **board = NULL;
