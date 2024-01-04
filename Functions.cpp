@@ -2,26 +2,33 @@
 
 
 void setup(_difficulty *mode_);
-void simulate(int mx, int my, bool leftClick, bool rightClick);
+
 void leftClick_on_default(int i, int j);
 void leftClick_on_exposed(int i, int j);
-void dfs(int i, int j);
-void saveData();
-void getSettings();
+void simulate(int mx, int my, bool leftClick, bool rightClick);
+void safeFirstClick(int mx, int my, bool leftClick, bool rightClick);
+
 void gameWon_statChange();
 void gameLost_statChange();
+
 void getStat();
+void saveData();
+void resetStat();
+void getSettings();
+
 void exitGame();
-void safeFirstClick(int mx, int my, bool leftClick, bool rightClick);
 void deleteBoard();
+
+void bfs();
+void dfs(int i, int j);
+
 void inGameTimer();
 void winAnimation();
-void bfs();
-void resetStat();
 void playSound(int n);
-void Qpush(int n);
+
 int Qpop();
 int Qsize();
+void Qpush(int n);
 
 
 void setup(_difficulty *mode_)
@@ -327,7 +334,7 @@ void exitGame()
 void safeFirstClick(int mx, int my, bool leftClick, bool rightClick)
 {
     int i = (mx - mode.x) / mode.w, j = (my - mode.y) / mode.w;
-    if (i >= 0 && i < mode.row && j >= 0 && j < mode.col && (leftClick || rightClick))
+    if (i >= 0 && i < mode.row && j >= 0 && j < mode.col)
     {
         firstClick = false;
         if (leftClick && board[i][j].isMine)

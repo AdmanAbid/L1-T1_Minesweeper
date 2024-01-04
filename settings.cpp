@@ -1,8 +1,8 @@
 #pragma once
 
+void bfs();
 void inGameTimer();
 void winAnimation();
-void bfs();
 
 
 enum _gameState
@@ -17,6 +17,12 @@ enum _gameState
     GAME_WON,
     GAME_LOST,
 } gameState = MAIN_MENU;
+
+struct _difficulty
+{
+    int row, col, mines, notMines, x, y, w, statVal;
+    char image[2][13][50];
+} EASY, MEDIUM, HARD, mode;
 
 struct settingsVariables
 {
@@ -51,22 +57,11 @@ struct _cell
 };
 _cell **board = NULL;
 
-struct _difficulty
-{
-    int row, col, mines, notMines, x, y, w, statVal;
-    char image[2][13][50];
-} EASY, MEDIUM, HARD, mode;
-
-
-char IMAGE[2][30][50];
-char SOUND[10][50];
 
 const int screenWidth = 1200, screenHeight = 750;
 const int menuX = 490, menuY = 525, menuH = 50, menuW = 220, menuP = 10;
 const int newGameY = 490, resumeY = 570;
 const int homeX = 574, homeY = 5, homeW = 52;
-const int ywinX = 450, ywinY = 690;
-const int yloseX = 450, yloseY = 690;
 const int winX = 460, winY = 693;
 const int resetX = 540, resetY = 150;
 const int statX = 540, statY = 600, statH = 50, statW = 120, statP = 20;
@@ -74,26 +69,28 @@ const int stat2X = 1030, stat2Y = 498, stat2P = 45;
 const int stat3X = 128, stat3Y = 452, stat3P = 45;
 const int setX = 325, setX2 = 725, setY = 520, setP = 10, setH = 50, setW = 150;
 
-int di[] = {1, 1, 1, -1, -1, -1, 0, 0};
-int dj[] = {0, 1, -1, 0, 1, -1, 1, -1};
-
-int flagged = 0, exposed = 0;
-bool isRecord = false, canResume = false;
 int _time = 0, curStat = 0;
-char str[50];
+int flagged = 0, exposed = 0;
+bool isRecord = false, canResume = false, firstClick = false;
 
 int theme = 1;
-bool music = false;
+bool music = true;
+bool autoChord = true;
 bool animation = false;
-bool autoChord = false;
 
 int queue[500];
-bool firstClick = false;
 int front = 0, back = 0, count = 0;
+
+int di[] = {1, 1, 1, -1, -1, -1, 0, 0};
+int dj[] = {0, 1, -1, 0, 1, -1, 1, -1};
 
 int t1 = iSetTimer(1000, inGameTimer);
 int t2 = iSetTimer(500, bfs);
 int t3 = iSetTimer(600, winAnimation);
+
+char str[50];
+char SOUND[10][50];
+char IMAGE[2][30][50];
 
 void initiate()
 {
