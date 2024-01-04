@@ -20,7 +20,7 @@ enum _gameState
 
 struct _difficulty
 {
-    int row, col, mines, notMines, x, y, w, statVal;
+    int col, row, mines, notMines, x, y, w, statVal;
     char image[2][13][50];
 } EASY, MEDIUM, HARD, mode;
 
@@ -86,7 +86,7 @@ int dj[] = {0, 1, -1, 0, 1, -1, 1, -1};
 
 int t1 = iSetTimer(1000, inGameTimer);
 int t2 = iSetTimer(500, bfs);
-int t3 = iSetTimer(600, winAnimation);
+int t3 = iSetTimer(500, winAnimation);
 
 char str[50];
 char SOUND[10][50];
@@ -94,8 +94,8 @@ char IMAGE[2][30][50];
 
 void initiate()
 {
-    EASY.row = 9;
     EASY.col = 9;
+    EASY.row = 9;
     EASY.mines = 10;
     EASY.notMines = 71;
     EASY.x = 312;
@@ -132,8 +132,8 @@ void initiate()
     strcpy(EASY.image[1][12], "Images/Dark/eight.bmp");
 
 
-    MEDIUM.row = 16;
     MEDIUM.col = 16;
+    MEDIUM.row = 16;
     MEDIUM.mines = 40;
     MEDIUM.notMines = 216;
     MEDIUM.x = 312;
@@ -170,8 +170,8 @@ void initiate()
     strcpy(MEDIUM.image[1][12], "Images/Dark/eight2.bmp");
 
 
-    HARD.row = 30;
-    HARD.col = 16;
+    HARD.col = 30;
+    HARD.row = 16;
     HARD.mines = 99;
     HARD.notMines = 381;
     HARD.x = 60;

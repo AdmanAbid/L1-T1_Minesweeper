@@ -83,8 +83,8 @@ void iDraw()
     case IN_GAME:
         iShowBMP(0, 0, IMAGE[theme][0]); //background
         iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        for (int i = 0; i < mode.row; i++){
-            for (int j = 0; j < mode.col; j++){
+        for (int i = 0; i < mode.col; i++){
+            for (int j = 0; j < mode.row; j++){
                 if (board[i][j].state == DEFAULT) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]);
                 else if (board[i][j].state == FLAGGED) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]);
                 else if (board[i][j].state == EXPOSED) showNum(i, j);
@@ -97,8 +97,8 @@ void iDraw()
         iShowBMP(0, 0, IMAGE[theme][0]); //background
         iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
         printText2();
-        for (int i = 0; i < mode.row; i++){
-            for (int j = 0; j < mode.col; j++){
+        for (int i = 0; i < mode.col; i++){
+            for (int j = 0; j < mode.row; j++){
                 if (board[i][j].isMine)
                 {
                     if (!animation) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); // mine
@@ -116,8 +116,8 @@ void iDraw()
         iShowBMP(0, 0, IMAGE[theme][0]); //background
         iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
         iShowBMP(winX, winY, IMAGE[theme][11]);
-        for (int i = 0; i < mode.row; i++){
-            for (int j = 0; j < mode.col; j++){
+        for (int i = 0; i < mode.col; i++){
+            for (int j = 0; j < mode.row; j++){
                 if (board[i][j].isMine && board[i][j].visited) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][2]); //exmine
                 else if (board[i][j].isMine && !board[i][j].visited) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); //mine
                 else if (board[i][j].state == FLAGGED) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]);
@@ -139,7 +139,7 @@ void iMouse(int button, int state, int mx, int my)
     case MAIN_MENU:
         if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY && my > menuY-menuH) gameState = NEW_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-menuH-menuP && my > menuY-2*menuH-menuP) gameState = SETTINGS, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-2*menuH-2*menuP && my > menuY-3*menuH-2*menuP) getStat(), gameState = STATISTICS, playSound(7);
+        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-2*menuH-2*menuP && my > menuY-3*menuH-2*menuP) gameState = STATISTICS, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-3*menuH-3*menuP && my > menuY-4*menuH-3*menuP) gameState = ABOUT, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-4*menuH-4*menuP && my > menuY-5*menuH-4*menuP) exitGame();
         break;
@@ -148,7 +148,7 @@ void iMouse(int button, int state, int mx, int my)
         if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY && my > resumeY-menuH) gameState = IN_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-menuH-menuP && my > resumeY-2*menuH-menuP) gameState = NEW_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-2*menuH-2*menuP && my > resumeY-3*menuH-2*menuP) gameState = SETTINGS, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-3*menuH-3*menuP && my > resumeY-4*menuH-3*menuP) getStat(), gameState = STATISTICS, playSound(7);
+        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-3*menuH-3*menuP && my > resumeY-4*menuH-3*menuP) gameState = STATISTICS, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-4*menuH-4*menuP && my > resumeY-5*menuH-4*menuP) gameState = ABOUT, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-5*menuH-5*menuP && my > resumeY-6*menuH-5*menuP) exitGame();
         break;
@@ -197,7 +197,7 @@ void iMouseMove(int mx, int my) {}
 void iKeyboard(unsigned char key) {}
 void iSpecialKeyboard(unsigned char key) {}
 
-int main()
+int main(int argc, char **argv)
 {
     initiate();
     getSettings();
