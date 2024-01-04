@@ -290,9 +290,6 @@ void showStat()
         iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
     }
 
-    for (; t < 5; t++)
-    {
-        sprintf(str, "---                 ------------");
-        iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
-    }
+    sprintf(str, "---                 ------------");
+    for (; t < 5; t++) iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 }
