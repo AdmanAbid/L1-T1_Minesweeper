@@ -311,7 +311,20 @@ void getSettings()
 
 void saveData()
 {
-    FILE *fp = fopen("GameData.txt", "wb");
+    FILE *fp = fopen("GameData.txt", "rb");
+    if (fp != NULL)
+    {
+        fread(&savedSettings, sizeof(settingsVariables), 1, fp);
+        fread(stats, sizeof(statVariables), 3, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for reading in saveData\n");
+        exit(1);
+    }
+
+    fp = fopen("GameData.txt", "wb");
     if (fp != NULL)
     {
         savedSettings.theme_ = theme;
@@ -325,7 +338,7 @@ void saveData()
     }
     else
     {
-        printf("Error opening file for writing\n");
+        printf("Error opening file for writing in saveData\n");
         exit(1);
     }
 }
