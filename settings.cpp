@@ -59,6 +59,7 @@ _cell **board = NULL;
 
 const int screenWidth = 1200, screenHeight = 750;
 const int menuX = 490, menuY = 525, menuH = 50, menuW = 220, menuP = 10;
+const int text1X = 130, text1Y = 710, text2X = 1025, text2Y = 710;
 const int newGameY = 490, resumeY = 570;
 const int homeX = 574, homeY = 5, homeW = 52;
 const int winX = 460, winY = 693;

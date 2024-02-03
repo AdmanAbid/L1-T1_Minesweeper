@@ -245,10 +245,10 @@ void printText()
     else iSetColor(255, 255, 255);
 
     sprintf(str, "Mine: %d", mode.mines-flagged);
-    iText(130, 710, str, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(text1X, text1Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
     sprintf(str, "Time: %d", _time);
-    iText(1025, 710, str, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(text2X, text2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
 }
 
 void printText2()
@@ -257,7 +257,7 @@ void printText2()
     else iSetColor(255, 255, 255);
 
     sprintf(str, "Time: %d", _time);
-    iText(1025, 710, str, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(text2X, text2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
 }
 
 void showStat()
