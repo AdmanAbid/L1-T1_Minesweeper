@@ -1,14 +1,15 @@
+#pragma once
 #include "Settings.cpp"
 
 void setup(_difficulty *mode_);
 
-void leftClick_on_default(int i, int j);
-void leftClick_on_exposed(int i, int j);
+void leftClickOnDefault(int i, int j);
+void leftClickOnExposed(int i, int j);
 void simulate(int mx, int my, bool leftClick, bool rightClick);
 void safeFirstClick(int mx, int my, bool leftClick, bool rightClick);
 
-void gameWon_statChange();
-void gameLost_statChange();
+void gameWonStatChange();
+void gameLostStatChange();
 
 void readGameData();
 void writeGameData();
@@ -46,7 +47,7 @@ void setup(_difficulty *mode_)
 
 	board = (_cell **)malloc(mode.col * sizeof(_cell *));
     for (int i = 0; i < mode.col; i++) board[i] = (_cell *)malloc(mode.row * sizeof(_cell));
-    
+
     for (int i = 0; i < mode.col; i++){
         for (int j = 0; j < mode.row; j++){
             board[i][j].num = 0;
@@ -59,8 +60,7 @@ void setup(_difficulty *mode_)
     for (int n = 0; n < mode.mines; n++)
 	{
 		int i, j;
-		do
-		{
+		do {
 			i = rand() % mode.col, j = rand() % mode.row;
 		} while (board[i][j].isMine);
 
@@ -78,8 +78,8 @@ void simulate(int mx, int my, bool leftClick, bool rightClick)
     int i = (mx - mode.x) / mode.w, j = (my - mode.y) / mode.w;
     if (leftClick && i >= 0 && i < mode.col && j >= 0 && j < mode.row)
     {
-        if (board[i][j].state == DEFAULT) playSound(2), leftClick_on_default(i, j);
-        else if (board[i][j].state == EXPOSED && board[i][j].num != 0) playSound(0), leftClick_on_exposed(i, j);
+        if (board[i][j].state == DEFAULT) playSound(2), leftClickOnDefault(i, j);
+        else if (board[i][j].state == EXPOSED && board[i][j].num != 0) playSound(0), leftClickOnExposed(i, j);
     }
     else if (rightClick && i >= 0 && i < mode.col && j >= 0 && j < mode.row)
     {
@@ -94,7 +94,7 @@ void simulate(int mx, int my, bool leftClick, bool rightClick)
                     int I = i + di[k], J = j + dj[k];
                     if (I >= 0 && I < mode.col && J >= 0 && J < mode.row && board[I][J].state == EXPOSED)
                     {
-                        leftClick_on_exposed(I, J);
+                        leftClickOnExposed(I, J);
                         if (gameState == GAME_LOST) break;
                     }
                 }
@@ -110,7 +110,7 @@ void simulate(int mx, int my, bool leftClick, bool rightClick)
     {
         playSound(8);
         canResume = false;
-        gameWon_statChange();
+        gameWonStatChange();
         gameState = GAME_WON;
     }
 }
@@ -128,19 +128,19 @@ void dfs(int i, int j)
 	}
 }
 
-void leftClick_on_default(int i, int j)
+void leftClickOnDefault(int i, int j)
 {
     if (!board[i][j].isMine)
     {
         exposed++;
         board[i][j].state = EXPOSED;
         if (board[i][j].num == 0) dfs(i, j);
-        if (autoChord) leftClick_on_exposed(i, j);
+        if (autoChord) leftClickOnExposed(i, j);
     }
     else
     {
         canResume = false;
-        gameLost_statChange();
+        gameLostStatChange();
         gameState = GAME_LOST;
         board[i][j].visited = true;
         if (animation) Qpush(i*30 + j);
@@ -148,7 +148,7 @@ void leftClick_on_default(int i, int j)
     }
 }
 
-void leftClick_on_exposed(int i, int j)
+void leftClickOnExposed(int i, int j)
 {
     int flagCount = 0;
     for (int k = 0; k < 8; k++)
@@ -163,7 +163,7 @@ void leftClick_on_exposed(int i, int j)
         int I = i + di[k], J = j + dj[k];
         if (I >= 0 && I < mode.col && J >= 0 && J < mode.row && board[I][J].state == DEFAULT)
         {
-            leftClick_on_default(I, J);
+            leftClickOnDefault(I, J);
             if (gameState == GAME_LOST) break;
         }
     }
@@ -249,7 +249,7 @@ void saveSettings()
     writeGameData();
 }
 
-void gameWon_statChange()
+void gameWonStatChange()
 {
     stats[mode.statVal].gamesWon++;
     stats[mode.statVal].gamesPlayed++;
@@ -275,7 +275,7 @@ void gameWon_statChange()
     writeGameData();
 }
 
-void gameLost_statChange()
+void gameLostStatChange()
 {
     stats[mode.statVal].gamesPlayed++;
     stats[mode.statVal].currentWinning = 0;
