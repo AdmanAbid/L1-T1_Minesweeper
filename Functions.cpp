@@ -35,6 +35,7 @@ void Qpush(int n);
 void setup(_difficulty *mode_)
 {
     playSound(6);
+    deleteBoard();
     count = mode.col;
     firstClick = true;
     front = 0, back = 0;
@@ -43,7 +44,6 @@ void setup(_difficulty *mode_)
     mode = *mode_, gameState = IN_GAME;
     _time = 0, isRecord = false, canResume = true;
 
-    deleteBoard();
 	board = (_cell **)malloc(mode.col * sizeof(_cell *));
     for (int i = 0; i < mode.col; i++) board[i] = (_cell *)malloc(mode.row * sizeof(_cell));
     
@@ -348,7 +348,7 @@ void deleteBoard()
 {
     if (board)
     {
-        for (int i = 0; i < sizeof(board)/sizeof(_cell *); i++) free(board[i]);
+        for (int i = 0; i < mode.col; i++) free(board[i]);
         free(board);
         board = NULL;
     }
