@@ -7,6 +7,11 @@ void printText();
 void printText2();
 void showNum(int i, int j);
 
+char name[100];
+int nameInd = 0;
+bool takeUserName = false;
+bool takePassword = false;
+
 void iDraw()
 {
     iClear();
@@ -22,6 +27,17 @@ void iDraw()
 
     switch (gameState)
     {
+    case LOG_IN:
+        iShowBMP(0, 0, IMAGE[theme][29]); //login page
+        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+        if (takeUserName) 
+        {
+            iSetColor()
+            iText(528, 385, name, GLUT_BITMAP_TIMES_ROMAN_24);
+        }
+
+        break;
+
     case MAIN_MENU:
         iShowBMP(0, 0, IMAGE[theme][0]); //background
         iShowBMP(menuX, menuY - menuH, IMAGE[theme][2]); //newgame
@@ -136,6 +152,11 @@ void iMouse(int button, int state, int mx, int my)
 
     switch(gameState)
     {
+    case LOG_IN:
+        if (leftClick && mx > 528 && mx < 835 && my > 385 && my < 435) takeUserName = true;
+        else if (leftClick && mx > 528 && mx < 835 && my > 310 && my < 360) takePassword = true;
+        break;
+
     case MAIN_MENU:
         if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY && my > menuY-menuH) gameState = NEW_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-menuH-menuP && my > menuY-2*menuH-menuP) gameState = SETTINGS, playSound(7);
@@ -193,8 +214,20 @@ void iMouse(int button, int state, int mx, int my)
     }
 }
 
+
+
+void iKeyboard(unsigned char key)
+{
+    if (takeUserName)
+    {
+        name[nameInd++] = key;
+        name[nameInd] = 0;
+        puts(name);
+    }
+}
+
+
 void iMouseMove(int mx, int my) {}
-void iKeyboard(unsigned char key) {}
 void iSpecialKeyboard(unsigned char key) {}
 
 int main(int argc, char **argv)

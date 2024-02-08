@@ -15,7 +15,8 @@ enum _gameState
     IN_GAME,
     GAME_WON,
     GAME_LOST,
-} gameState = MAIN_MENU;
+    LOG_IN,
+} gameState = LOG_IN;
 
 struct _difficulty
 {
@@ -40,6 +41,13 @@ struct statVariables
     int gamesPlayed, gamesWon, maxWinning, maxLosing, currentWinning, currentLosing;
     score_date score[5];
 } stats[3];
+
+struct userData
+{
+    int userIndex;
+    settingsVariables settings;
+    statVariables stats[3];
+};
 
 enum _cellState
 {
@@ -267,6 +275,7 @@ void initiate()
     strcpy(IMAGE[1][26], "Images/Dark/statmedium.bmp");
     strcpy(IMAGE[1][27], "Images/Dark/stathard.bmp");
     strcpy(IMAGE[1][28], "Images/Dark/aboutscreen.bmp");
+    strcpy(IMAGE[1][29], "Images/Dark/loginpage.bmp");
 
 
     strcpy(SOUND[0], "Sounds/Chord.wav");

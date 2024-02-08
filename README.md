@@ -14,9 +14,7 @@ Features:
 5. Saved settings from previous instance
 6. Saved statistics, including 5 best times of each level
 7. Click chording and auto chording
-8. Added first click safe:
-    if the first click is a mine then the mine is moved to the first available cell
-    in the top row, starting from left to right.
+8. Safe first click
 
 
 -- Adman Habib Abid
