@@ -32,6 +32,8 @@ int Qpop();
 int Qsize();
 void Qpush(int n);
 
+void readUserData();
+
 
 void setup(_difficulty *mode_)
 {
@@ -43,7 +45,7 @@ void setup(_difficulty *mode_)
     srand((unsigned int)time(NULL));
     mode = *mode_, gameState = IN_GAME;
     _time = 0, isRecord = false, canResume = true;
-    count = mode.row;
+    rowCount = mode.row;
 
 	board = (_cell **)malloc(mode.col * sizeof(_cell *));
     for (int i = 0; i < mode.col; i++) board[i] = (_cell *)malloc(mode.row * sizeof(_cell));
@@ -327,10 +329,10 @@ void bfs()
 
 void winAnimation()
 {
-    if (count)
+    if (rowCount)
     {
-        count--;
-        for (int i = 0; i < mode.col; i++) board[i][count].visited = true;
+        rowCount--;
+        for (int i = 0; i < mode.col; i++) board[i][rowCount].visited = true;
     }
 }
 

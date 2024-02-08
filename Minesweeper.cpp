@@ -7,19 +7,9 @@ void printText();
 void printText2();
 void showNum(int i, int j);
 
-char name[100], password[100];
-int nameInd = 0, passwordInd = 0;
-bool takeUserName = false, userNameTaken = false;
-bool takePassword = false, passwordTaken = false;
-char key1[] = "admin", key2[] = "1234";
-
 void iDraw()
 {
     iClear();
-    if (userNameTaken && passwordTaken)
-    {
-        if (!strcmp(name, key1) && !strcmp(password, key2)) gameState = MAIN_MENU;
-    }
 
     if (gameState == IN_GAME) iResumeTimer(t1);
     else iPauseTimer(t1);
@@ -34,18 +24,38 @@ void iDraw()
     {
     case LOG_IN:
         iShowBMP(0, 0, IMAGE[theme][29]); //login page
-        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        if (takeUserName || userNameTaken) 
-        {
-            iSetColor(0, 0, 0);
-            iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
-        }
-        if (takePassword || passwordTaken)
-        {
-            iSetColor(0, 0, 0);
-            iText(540, 325, password, GLUT_BITMAP_TIMES_ROMAN_24);
-        }
+        iShowBMP(490, 550, IMAGE[theme][32]); //register
+        if (takingUserName) iShowBMP2(840, 393, IMAGE[theme][30], 0);
+        if (takingPassword) iShowBMP2(840, 318, IMAGE[theme][30], 0); 
 
+        iSetColor(0, 0, 0);
+        iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
+        if (!takingPassword && !takingUserName && !strcmp(name, key1) && !strcmp(password, key2))
+        {
+            gameState = MAIN_MENU;
+            name[0] = password[0] = password2[0] = 0;
+            nameInd = passwordInd = 0;
+            takingUserName = true, takingPassword = false;
+        }
+        break;
+
+    case REGISTER:
+        iShowBMP(0, 0, IMAGE[theme][29]); //login page
+        iShowBMP(490, 550, IMAGE[theme][31]); //login
+        if (takingUserName) iShowBMP2(840, 393, IMAGE[theme][30], 0);
+        if (takingPassword) iShowBMP2(840, 318, IMAGE[theme][30], 0); 
+
+        iSetColor(0, 0, 0);
+        iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
+        if (!takingPassword && !takingUserName && !strcmp(name, key1) && !strcmp(password, key2))
+        {
+            gameState = MAIN_MENU;
+            name[0] = password[0] = password2[0] = 0;
+            nameInd = passwordInd = 0;
+            takingUserName = true, takingPassword = false;
+        }
         break;
 
     case MAIN_MENU:
@@ -55,6 +65,7 @@ void iDraw()
         iShowBMP(menuX, menuY - 3*menuH - 2*menuP, IMAGE[theme][4]); //stats
         iShowBMP(menuX, menuY - 4*menuH - 3*menuP, IMAGE[theme][5]); //about
         iShowBMP(menuX, menuY - 5*menuH - 4*menuP, IMAGE[theme][6]); //exit
+        iShowBMP(1025, 75, IMAGE[theme][33]); //logout
         break;
 
     case RESUME_MENU:
@@ -65,6 +76,7 @@ void iDraw()
         iShowBMP(menuX, resumeY - 4*menuH - 3*menuP, IMAGE[theme][4]); //stats
         iShowBMP(menuX, resumeY - 5*menuH - 4*menuP, IMAGE[theme][5]); //about
         iShowBMP(menuX, resumeY - 6*menuH - 5*menuP, IMAGE[theme][6]); //exit
+        iShowBMP(1025, 75, IMAGE[theme][33]); //logout
         break;
 
     case NEW_GAME:
@@ -163,16 +175,27 @@ void iMouse(int button, int state, int mx, int my)
     switch(gameState)
     {
     case LOG_IN:
-        if (leftClick && mx > 528 && mx < 835 && my > 385 && my < 435)
+        if (leftClick && mx > 490 && mx < 490+220 && my > 550 && my < 550+50)
         {
-            takeUserName = true;
-            userNameTaken = false;
+            gameState = REGISTER;
+            name[0] = password[0] = password2[0] = 0;
+            nameInd = passwordInd = 0;
+            takingUserName = true, takingPassword = false;
         }
-        else if (leftClick && mx > 528 && mx < 835 && my > 310 && my < 360)
+        if (leftClick && mx > 528 && mx < 835 && my > 385 && my < 435) takingUserName = true, takingPassword = false;
+        else if (leftClick && mx > 528 && mx < 835 && my > 310 && my < 360) takingPassword = true, takingUserName = false;
+        break;
+
+    case REGISTER:
+        if (leftClick && mx > 490 && mx < 490+220 && my > 550 && my < 550+50)
         {
-            takePassword = true;
-            passwordTaken = false;
+            gameState = LOG_IN;
+            name[0] = password[0] = password2[0] = 0;
+            nameInd = passwordInd = 0;
+            takingUserName = true, takingPassword = false;
         }
+        if (leftClick && mx > 528 && mx < 835 && my > 385 && my < 435) takingUserName = true, takingPassword = false;
+        else if (leftClick && mx > 528 && mx < 835 && my > 310 && my < 360) takingPassword = true, takingUserName = false;
         break;
 
     case MAIN_MENU:
@@ -181,6 +204,7 @@ void iMouse(int button, int state, int mx, int my)
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-2*menuH-2*menuP && my > menuY-3*menuH-2*menuP) gameState = STATISTICS, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-3*menuH-3*menuP && my > menuY-4*menuH-3*menuP) gameState = ABOUT, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-4*menuH-4*menuP && my > menuY-5*menuH-4*menuP) exitGame();
+        else if (leftClick && mx > 1025 && mx < 1025+160 && my > 75 && my < 75+50) gameState = LOG_IN, playSound(7);
         break;
 
     case RESUME_MENU:
@@ -190,6 +214,7 @@ void iMouse(int button, int state, int mx, int my)
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-3*menuH-3*menuP && my > resumeY-4*menuH-3*menuP) gameState = STATISTICS, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-4*menuH-4*menuP && my > resumeY-5*menuH-4*menuP) gameState = ABOUT, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-5*menuH-5*menuP && my > resumeY-6*menuH-5*menuP) exitGame();
+        else if (leftClick && mx > 1025 && mx < 1025+160 && my > 75 && my < 75+50) gameState = LOG_IN, playSound(7);
         break;
 
     case SETTINGS:
@@ -236,14 +261,9 @@ void iMouse(int button, int state, int mx, int my)
 
 void iKeyboard(unsigned char key)
 {
-    if (takeUserName)
+    if (takingUserName)
     {
-        if (key == '\r')
-        {
-            takeUserName = false, userNameTaken = true;
-            printf("%d %d\n", strlen(name), strcmp(name, key1));
-            for (int i = 0; i < strlen(name); i++) printf("%d ", name[i]);
-        }
+        if (key == '\r') takingUserName = false, takingPassword = true;
 
         else if (key == '\b') 
         {
@@ -251,35 +271,30 @@ void iKeyboard(unsigned char key)
             if (nameInd < 0) nameInd = 0;
             name[nameInd] = 0;
         }
-        else
+        else if (nameInd < 24)
         {
             name[nameInd++] = key;
             name[nameInd] = 0;
         }
-        // puts(name);
     }
 
-    else if (takePassword)
+    else if (takingPassword)
     {
-        if (key == '\r')
-        {
-            takePassword = false, passwordTaken = true;
-            printf("%d %d\n", strlen(password), strcmp(password, key2));
-            for (int i = 0; i < strlen(password); i++) printf("%d ", password[i]);
-        }
+        if (key == '\r') takingPassword = false;
 
         else if (key == '\b')
         {
             passwordInd--;
             if (passwordInd < 0) passwordInd = 0;
-            password[passwordInd] = 0;
+            password[passwordInd] = password2[passwordInd] = 0;
         }
-        else 
+        else if (passwordInd < 24)
         {
-            password[passwordInd++] = key;
-            password[passwordInd] = 0;
+            password[passwordInd] = key;
+            password2[passwordInd] = '*';
+            passwordInd++;
+            password[passwordInd] = password2[passwordInd] = 0;
         }
-        // puts(password);
     }
 }
 

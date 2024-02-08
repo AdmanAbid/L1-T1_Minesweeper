@@ -16,6 +16,7 @@ enum _gameState
     GAME_WON,
     GAME_LOST,
     LOG_IN,
+    REGISTER,
 } gameState = LOG_IN;
 
 struct _difficulty
@@ -87,7 +88,7 @@ bool autoChord = true;
 bool animation = false;
 
 int queue[500];
-int front = 0, back = 0, count = 0;
+int front = 0, back = 0, rowCount = 0;
 
 int di[] = {1, 1, 1, -1, -1, -1, 0, 0};
 int dj[] = {0, 1, -1, 0, 1, -1, 1, -1};
@@ -98,7 +99,15 @@ int t3 = iSetTimer(500, winAnimation);
 
 char str[50];
 char SOUND[10][50];
-char IMAGE[2][30][50];
+char IMAGE[2][50][50];
+
+char name[100], password[100], password2[100];
+int nameInd = 0, passwordInd = 0;
+bool takingUserName = true, takingPassword = false;
+char key1[] = "admin", key2[] = "1234";
+int userCount = 0;
+
+
 
 void initiate()
 {
@@ -276,6 +285,10 @@ void initiate()
     strcpy(IMAGE[1][27], "Images/Dark/stathard.bmp");
     strcpy(IMAGE[1][28], "Images/Dark/aboutscreen.bmp");
     strcpy(IMAGE[1][29], "Images/Dark/loginpage.bmp");
+    strcpy(IMAGE[1][30], "Images/Dark/pointer.bmp");
+    strcpy(IMAGE[1][31], "Images/Dark/login.bmp");
+    strcpy(IMAGE[1][32], "Images/Dark/register.bmp");
+    strcpy(IMAGE[1][33], "Images/Dark/logout.bmp");
 
 
     strcpy(SOUND[0], "Sounds/Chord.wav");
