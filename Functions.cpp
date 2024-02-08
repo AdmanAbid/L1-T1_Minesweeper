@@ -33,6 +33,10 @@ int Qsize();
 void Qpush(int n);
 
 void readUserData();
+void freeUserData();
+void checkUserPassword();
+void addNewUser();
+void saveUserData();
 
 
 void setup(_difficulty *mode_)
@@ -234,6 +238,7 @@ void writeGameData()
 
 void getSettings()
 {
+    readUserData();
     readGameData();
     theme = savedSettings.theme_;
     music = savedSettings.music_;
@@ -361,6 +366,76 @@ void exitGame()
     playSound(7);
     deleteBoard();
     saveSettings();
+    freeUserData();
     if (music) Sleep(400); //to play exit sound
     exit(0);
+}
+
+void readUserData()
+{
+    FILE *fp = fopen("UserData.txt", "rb");
+    if (fp)
+    {
+        fread(&userCount, sizeof(int), 1, fp);
+        userList = (_userData *)malloc(sizeof(_userData) * (userCount+1));
+        fread(userList, sizeof(_userData), userCount, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for reading.\n");
+        exit(1);
+    }
+}
+
+void freeUserData()
+{
+    free(userList);
+}
+
+void checkUserPassword()
+{
+    for (int i = 0; i < userCount; i++)
+    {
+        if (!strcmp(name, userList[i]._name) && !strcmp(password, userList[i]._password))
+        {
+            gameState = MAIN_MENU;
+            name[0] = password[0] = password2[0] = 0;
+            nameInd = passwordInd = 0;
+            takingUserName = true, takingPassword = false;
+            curUser = i;
+            break;
+        }
+    }
+}
+
+void addNewUser()
+{
+    strcpy(userList[userCount]._name, name);
+    strcpy(userList[userCount]._password, password);
+    curUser = userCount;
+    userCount++;
+    saveUserData();
+    freeUserData();
+    readUserData();
+}
+
+void saveUserData()
+{
+    FILE *fp = fopen("UserData.txt", "wb");
+    if (fp)
+    {
+        fwrite(&userCount, sizeof(int), 1, fp);
+        fwrite(userList, sizeof(_userData), userCount, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for writing.\n");
+        exit(1);
+    }
+    gameState = MAIN_MENU;
+    name[0] = password[0] = password2[0] = 0;
+    nameInd = passwordInd = 0;
+    takingUserName = true, takingPassword = false;
 }

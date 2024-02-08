@@ -50,6 +50,12 @@ struct userData
     statVariables stats[3];
 };
 
+struct _userData
+{
+    char _name[100];
+    char _password[100];
+};
+
 enum _cellState
 {
     DEFAULT,
@@ -104,10 +110,8 @@ char IMAGE[2][50][50];
 char name[100], password[100], password2[100];
 int nameInd = 0, passwordInd = 0;
 bool takingUserName = true, takingPassword = false;
-char key1[] = "admin", key2[] = "1234";
-int userCount = 0;
-
-
+int userCount = 0, curUser = 0;
+_userData *userList = NULL;
 
 void initiate()
 {

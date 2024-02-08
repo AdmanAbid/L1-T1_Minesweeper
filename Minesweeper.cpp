@@ -31,13 +31,7 @@ void iDraw()
         iSetColor(0, 0, 0);
         iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
         iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
-        if (!takingPassword && !takingUserName && !strcmp(name, key1) && !strcmp(password, key2))
-        {
-            gameState = MAIN_MENU;
-            name[0] = password[0] = password2[0] = 0;
-            nameInd = passwordInd = 0;
-            takingUserName = true, takingPassword = false;
-        }
+        if (!takingPassword && !takingUserName) checkUserPassword();
         break;
 
     case REGISTER:
@@ -49,13 +43,7 @@ void iDraw()
         iSetColor(0, 0, 0);
         iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
         iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
-        if (!takingPassword && !takingUserName && !strcmp(name, key1) && !strcmp(password, key2))
-        {
-            gameState = MAIN_MENU;
-            name[0] = password[0] = password2[0] = 0;
-            nameInd = passwordInd = 0;
-            takingUserName = true, takingPassword = false;
-        }
+        if (!takingPassword && !takingUserName) addNewUser();
         break;
 
     case MAIN_MENU:
