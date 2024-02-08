@@ -7,14 +7,19 @@ void printText();
 void printText2();
 void showNum(int i, int j);
 
-char name[100];
-int nameInd = 0;
-bool takeUserName = false;
-bool takePassword = false;
+char name[100], password[100];
+int nameInd = 0, passwordInd = 0;
+bool takeUserName = false, userNameTaken = false;
+bool takePassword = false, passwordTaken = false;
+char key1[] = "admin", key2[] = "1234";
 
 void iDraw()
 {
     iClear();
+    if (userNameTaken && passwordTaken)
+    {
+        if (!strcmp(name, key1) && !strcmp(password, key2)) gameState = MAIN_MENU;
+    }
 
     if (gameState == IN_GAME) iResumeTimer(t1);
     else iPauseTimer(t1);
@@ -30,10 +35,15 @@ void iDraw()
     case LOG_IN:
         iShowBMP(0, 0, IMAGE[theme][29]); //login page
         iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        if (takeUserName) 
+        if (takeUserName || userNameTaken) 
         {
-            iSetColor()
-            iText(528, 385, name, GLUT_BITMAP_TIMES_ROMAN_24);
+            iSetColor(0, 0, 0);
+            iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
+        }
+        if (takePassword || passwordTaken)
+        {
+            iSetColor(0, 0, 0);
+            iText(540, 325, password, GLUT_BITMAP_TIMES_ROMAN_24);
         }
 
         break;
@@ -153,8 +163,16 @@ void iMouse(int button, int state, int mx, int my)
     switch(gameState)
     {
     case LOG_IN:
-        if (leftClick && mx > 528 && mx < 835 && my > 385 && my < 435) takeUserName = true;
-        else if (leftClick && mx > 528 && mx < 835 && my > 310 && my < 360) takePassword = true;
+        if (leftClick && mx > 528 && mx < 835 && my > 385 && my < 435)
+        {
+            takeUserName = true;
+            userNameTaken = false;
+        }
+        else if (leftClick && mx > 528 && mx < 835 && my > 310 && my < 360)
+        {
+            takePassword = true;
+            passwordTaken = false;
+        }
         break;
 
     case MAIN_MENU:
@@ -220,15 +238,54 @@ void iKeyboard(unsigned char key)
 {
     if (takeUserName)
     {
-        name[nameInd++] = key;
-        name[nameInd] = 0;
-        puts(name);
+        if (key == '\r')
+        {
+            takeUserName = false, userNameTaken = true;
+            printf("%d %d\n", strlen(name), strcmp(name, key1));
+            for (int i = 0; i < strlen(name); i++) printf("%d ", name[i]);
+        }
+
+        else if (key == '\b') 
+        {
+            nameInd--;
+            if (nameInd < 0) nameInd = 0;
+            name[nameInd] = 0;
+        }
+        else
+        {
+            name[nameInd++] = key;
+            name[nameInd] = 0;
+        }
+        // puts(name);
+    }
+
+    else if (takePassword)
+    {
+        if (key == '\r')
+        {
+            takePassword = false, passwordTaken = true;
+            printf("%d %d\n", strlen(password), strcmp(password, key2));
+            for (int i = 0; i < strlen(password); i++) printf("%d ", password[i]);
+        }
+
+        else if (key == '\b')
+        {
+            passwordInd--;
+            if (passwordInd < 0) passwordInd = 0;
+            password[passwordInd] = 0;
+        }
+        else 
+        {
+            password[passwordInd++] = key;
+            password[passwordInd] = 0;
+        }
+        // puts(password);
     }
 }
 
+void iSpecialKeyboard(unsigned char key){}
 
 void iMouseMove(int mx, int my) {}
-void iSpecialKeyboard(unsigned char key) {}
 
 int main(int argc, char **argv)
 {
