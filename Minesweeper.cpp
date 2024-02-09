@@ -31,7 +31,6 @@ void iDraw()
         iSetColor(0, 0, 0);
         iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
         iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
-        if (!takingPassword && !takingUserName) checkUserPassword();
         break;
 
     case REGISTER:
@@ -284,6 +283,7 @@ void iKeyboard(unsigned char key)
             password[passwordInd] = password2[passwordInd] = 0;
         }
     }
+    if (!takingPassword && !takingUserName) checkUserPassword();
 }
 
 void iSpecialKeyboard(unsigned char key){}
@@ -292,7 +292,7 @@ void iMouseMove(int mx, int my) {}
 
 int main(int argc, char **argv)
 {
-    initiate();
+    initiateGame();
     getSettings();
     iInitialize(screenWidth, screenHeight, "Minesweeper");
     return 0;
@@ -357,30 +357,30 @@ void showStat()
 {
     iSetColor(0, 0, 0);
 
-    sprintf(str, "%03d", stats[curStat].gamesPlayed);
+    sprintf(str, "%03d", userStats[curUser].stats[curStat].gamesPlayed);
     iText(stat2X, stat2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
-    sprintf(str, "%03d", stats[curStat].gamesWon);
+    sprintf(str, "%03d", userStats[curUser].stats[curStat].gamesWon);
     iText(stat2X, stat2Y-stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
     int t = 0;
-    if (stats[curStat].gamesPlayed) t = stats[curStat].gamesWon*100 / stats[curStat].gamesPlayed;
+    if (userStats[curUser].stats[curStat].gamesPlayed) t = userStats[curUser].stats[curStat].gamesWon*100 / userStats[curUser].stats[curStat].gamesPlayed;
     sprintf(str, "%03d", t);
     iText(stat2X, stat2Y-2*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
-    sprintf(str, "%03d", stats[curStat].maxWinning);
+    sprintf(str, "%03d", userStats[curUser].stats[curStat].maxWinning);
     iText(stat2X, stat2Y-3*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
-    sprintf(str, "%03d", stats[curStat].maxLosing);
+    sprintf(str, "%03d", userStats[curUser].stats[curStat].maxLosing);
     iText(stat2X, stat2Y-4*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
-    sprintf(str, "%03d", stats[curStat].currentWinning);
+    sprintf(str, "%03d", userStats[curUser].stats[curStat].currentWinning);
     iText(stat2X, stat2Y-5*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
     for (t = 0; t < 5; t++)
     {
-        if (stats[curStat].score[t].score_ == __INT_MAX__) break;
-        sprintf(str, "%03d %30s", stats[curStat].score[t].score_, stats[curStat].score[t].date_);
+        if (userStats[curUser].stats[curStat].score[t].score_ == __INT_MAX__) break;
+        sprintf(str, "%03d %30s", userStats[curUser].stats[curStat].score[t].score_, userStats[curUser].stats[curStat].score[t].date_);
         iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
     }
 

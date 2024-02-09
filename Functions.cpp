@@ -11,9 +11,6 @@ void safeFirstClick(int mx, int my, bool leftClick, bool rightClick);
 void gameWonStatChange();
 void gameLostStatChange();
 
-void readGameData();
-void writeGameData();
-
 void resetStat();
 void getSettings();
 void saveSettings();
@@ -36,7 +33,12 @@ void readUserData();
 void freeUserData();
 void checkUserPassword();
 void addNewUser();
-void saveUserData();
+
+void readUserData();
+void writeUserData();
+
+void readUserStats();
+void writeUserStats();
 
 
 void setup(_difficulty *mode_)
@@ -204,102 +206,76 @@ void safeFirstClick(int mx, int my, bool leftClick, bool rightClick)
     simulate(mx, my, leftClick, rightClick);
 }
 
-void readGameData()
-{
-    FILE *fp = fopen("GameData.txt", "rb");
-    if (fp != NULL)
-    {
-        fread(&savedSettings, sizeof(settingsVariables), 1, fp);
-        fread(stats, sizeof(statVariables), 3, fp);
-        fclose(fp);
-    }
-    else
-    {
-        printf("Error opening file for reading.\n");
-        exit(1);
-    }
-}
-
-void writeGameData()
-{
-    FILE *fp = fopen("GameData.txt", "wb");
-    if (fp != NULL)
-    {
-        fwrite(&savedSettings, sizeof(settingsVariables), 1, fp);
-        fwrite(stats, sizeof(statVariables), 3, fp);
-        fclose(fp);
-    }
-    else
-    {
-        printf("Error opening file for writing.\n");
-        exit(1);
-    }
-}
-
 void getSettings()
 {
     readUserData();
-    readGameData();
-    theme = savedSettings.theme_;
-    music = savedSettings.music_;
-    animation = savedSettings.animation_;
-    autoChord = savedSettings.autoChord_;
+    readUserStats();
+    theme = userStats[curUser].settings.theme_;
+    music = userStats[curUser].settings.music_;
+    animation = userStats[curUser].settings.animation_;
+    autoChord = userStats[curUser].settings.autoChord_;
 }
 
 void saveSettings()
 {
-    readGameData();
-    savedSettings.theme_ = theme;
-    savedSettings.music_ = music;
-    savedSettings.animation_ = animation;
-    savedSettings.autoChord_ = autoChord;
-    writeGameData();
+    readUserStats();
+    // savedSettings.theme_ = theme;
+    // savedSettings.music_ = music;
+    // savedSettings.animation_ = animation;
+    // savedSettings.autoChord_ = autoChord;
+
+    userStats[curUser].settings.theme_ = theme;
+    userStats[curUser].settings.music_ = music;
+    userStats[curUser].settings.animation_ = animation;
+    userStats[curUser].settings.autoChord_ = autoChord;
+
+    writeUserStats();
 }
 
 void gameWonStatChange()
 {
-    stats[mode.statVal].gamesWon++;
-    stats[mode.statVal].gamesPlayed++;
-    stats[mode.statVal].currentLosing = 0;
-    if (++stats[mode.statVal].currentWinning > stats[mode.statVal].maxWinning) stats[mode.statVal].maxWinning++;
+    userStats[curUser].stats[mode.statVal].gamesWon++;
+    userStats[curUser].stats[mode.statVal].gamesPlayed++;
+    userStats[curUser].stats[mode.statVal].currentLosing = 0;
+    if (++userStats[curUser].stats[mode.statVal].currentWinning > userStats[curUser].stats[mode.statVal].maxWinning) userStats[curUser].stats[mode.statVal].maxWinning++;
 
     int i;
-    for (i = 0; i < 5; i++) if (_time < stats[mode.statVal].score[i].score_) break;
+    for (i = 0; i < 5; i++) if (_time < userStats[curUser].stats[mode.statVal].score[i].score_) break;
 
     if (i < 5)
     {
         isRecord = true;
-        for (int j = 3; j >= i; j--) stats[mode.statVal].score[j+1] = stats[mode.statVal].score[j];
+        for (int j = 3; j >= i; j--) userStats[curUser].stats[mode.statVal].score[j+1] = userStats[curUser].stats[mode.statVal].score[j];
+        userStats[curUser].stats[mode.statVal].score[i].score_ = _time;
 
         char date[20];
-        stats[mode.statVal].score[i].score_ = _time;
 
         time_t time2; time(&time2);
         tm *time3 = localtime(&time2);
         sprintf(date, "%02d-%02d-%d", time3->tm_mday, time3->tm_mon+1, time3->tm_year+1900);
-        strcpy(stats[mode.statVal].score[i].date_, date);
+        strcpy(userStats[curUser].stats[mode.statVal].score[i].date_, date);
     }
-    writeGameData();
+    writeUserStats();
 }
 
 void gameLostStatChange()
 {
-    stats[mode.statVal].gamesPlayed++;
-    stats[mode.statVal].currentWinning = 0;
-    if (++stats[mode.statVal].currentLosing > stats[mode.statVal].maxLosing) stats[mode.statVal].maxLosing++;
-    writeGameData();
+    userStats[curUser].stats[mode.statVal].gamesPlayed++;
+    userStats[curUser].stats[mode.statVal].currentWinning = 0;
+    if (++userStats[curUser].stats[mode.statVal].currentLosing > userStats[curUser].stats[mode.statVal].maxLosing) userStats[curUser].stats[mode.statVal].maxLosing++;
+    writeUserStats();
 }
 
 void resetStat()
 {
-    stats[curStat].gamesPlayed = 0;
-    stats[curStat].gamesWon = 0;
-    stats[curStat].currentWinning = 0;
-    stats[curStat].currentLosing = 0;
-    stats[curStat].maxWinning = 0;
-    stats[curStat].maxLosing = 0;
-    for (int i = 0; i < 5; i++) stats[curStat].score[i].score_ = __INT_MAX__;
-    writeGameData();
+    userStats[curUser].stats[curStat].gamesPlayed = 0;
+    userStats[curUser].stats[curStat].gamesWon = 0;
+    userStats[curUser].stats[curStat].currentWinning = 0;
+    userStats[curUser].stats[curStat].currentLosing = 0;
+    userStats[curUser].stats[curStat].maxWinning = 0;
+    userStats[curUser].stats[curStat].maxLosing = 0;
+    for (int i = 0; i < 5; i++) userStats[curUser].stats[curStat].score[i].score_ = __INT_MAX__;
+    writeUserStats();
 }
 
 void inGameTimer() { _time++; }
@@ -391,6 +367,7 @@ void readUserData()
 void freeUserData()
 {
     free(userList);
+    free(userStats);
 }
 
 void checkUserPassword()
@@ -399,11 +376,12 @@ void checkUserPassword()
     {
         if (!strcmp(name, userList[i]._name) && !strcmp(password, userList[i]._password))
         {
-            gameState = MAIN_MENU;
             name[0] = password[0] = password2[0] = 0;
             nameInd = passwordInd = 0;
             takingUserName = true, takingPassword = false;
             curUser = i;
+            getSettings();
+            gameState = MAIN_MENU;
             break;
         }
     }
@@ -415,12 +393,19 @@ void addNewUser()
     strcpy(userList[userCount]._password, password);
     curUser = userCount;
     userCount++;
-    saveUserData();
+    writeUserData();
+
+    gameState = MAIN_MENU;
+    name[0] = password[0] = password2[0] = 0;
+    nameInd = passwordInd = 0;
+    takingUserName = true, takingPassword = false;
+
     freeUserData();
     readUserData();
+
 }
 
-void saveUserData()
+void writeUserData()
 {
     FILE *fp = fopen("UserData.txt", "wb");
     if (fp)
@@ -434,8 +419,35 @@ void saveUserData()
         printf("Error opening file for writing.\n");
         exit(1);
     }
-    gameState = MAIN_MENU;
-    name[0] = password[0] = password2[0] = 0;
-    nameInd = passwordInd = 0;
-    takingUserName = true, takingPassword = false;
+}
+
+void readUserStats()
+{
+    FILE *fp = fopen("GameData.txt", "rb");
+    if (fp)
+    {
+        userStats = (_userStats *)malloc(sizeof(_userStats) * (userCount+1));
+        fread(userStats, sizeof(_userStats), userCount, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for reading.\n");
+        exit(1);
+    }
+}
+
+void writeUserStats()
+{
+    FILE *fp = fopen("GameData.txt", "wb");
+    if (fp)
+    {
+        fwrite(userStats, sizeof(_userStats), userCount, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for writing.\n");
+        exit(1);
+    }
 }

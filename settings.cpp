@@ -29,7 +29,7 @@ struct settingsVariables
 {
     int theme_;
     bool music_, autoChord_, animation_;
-} savedSettings;
+};
 
 struct score_date
 {
@@ -41,9 +41,9 @@ struct statVariables
 {
     int gamesPlayed, gamesWon, maxWinning, maxLosing, currentWinning, currentLosing;
     score_date score[5];
-} stats[3];
+};
 
-struct userData
+struct _userStats
 {
     int userIndex;
     settingsVariables settings;
@@ -69,7 +69,6 @@ struct _cell
     bool isMine, visited;
     _cellState state;
 };
-_cell **board = NULL;
 
 
 const int screenWidth = 1200, screenHeight = 750;
@@ -111,9 +110,12 @@ char name[100], password[100], password2[100];
 int nameInd = 0, passwordInd = 0;
 bool takingUserName = true, takingPassword = false;
 int userCount = 0, curUser = 0;
-_userData *userList = NULL;
 
-void initiate()
+_cell **board = NULL;
+_userData *userList = NULL;
+_userStats *userStats = NULL;
+
+void initiateGame()
 {
     EASY.col = 9;
     EASY.row = 9;
