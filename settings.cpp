@@ -82,6 +82,15 @@ const int statX = 540, statY = 550, statH = 50, statW = 120, statP = 20;
 const int stat2X = 1030, stat2Y = 498, stat2P = 45;
 const int stat3X = 128, stat3Y = 452, stat3P = 45;
 const int setX = 325, setX2 = 725, setY = 520, setP = 10, setH = 50, setW = 150;
+const int loginX = 490, loginY = 550, loginH = 50, loginW = 220;
+const int pointerX = 840, pointerY1 = 393, pointerY2 = 318;
+const int nameX = 540, nameY = 400;
+const int passwordX = 540, passwordY = 320;
+const int logoutX = 1025, logoutY = 75, logoutH = 50, logoutW = 160;
+const int nameBoxX = 528, nameBoxX2 = 835, nameBoxY = 385, nameBoxY2 = 435;
+const int passwordBoxY = 310, passwordBoxY2 = 360;
+const int leftarrowX = 50, rightarrowX = 1100, arrowY = 650, arrowW = 50;
+const int nameBox2X = 570, nameBox2Y = 662;
 
 int _time = 0, curStat = 0;
 int flagged = 0, exposed = 0;

@@ -2,6 +2,8 @@
 #include "Settings.cpp"
 #include "Functions.cpp"
 
+bool leftClick, rightClick;
+
 void showStat();
 void showTimeAndMineLeft();
 void showFInalTime();
@@ -19,6 +21,18 @@ void showAboutScreen();
 void showInGameScreen();
 void showGameWonScreen();
 void showGameLostScreen();
+
+void simulateLogIn(int mx, int my);
+void simulateRegister(int mx, int my);
+void simulateMainMenu(int mx, int my);
+void simulateResumeMenu(int mx, int my);
+void simulateSettings(int mx, int my);
+void simulateStatistics(int mx, int my);
+void simulateAbout(int mx, int my);
+void simulateNewGame(int mx, int my);
+void simulateInGame(int mx, int my);
+void simulateGameOver(int mx, int my);
+
 
 void iDraw()
 {
@@ -81,129 +95,84 @@ void iDraw()
 
 void iMouse(int button, int state, int mx, int my)
 {
-    bool leftClick = (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN);
-    bool rightClick = (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN);
+    leftClick = (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN);
+    rightClick = (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN);
 
     switch(gameState)
     {
-    case LOG_IN:
-        if (leftClick && mx > 490 && mx < 490+220 && my > 550 && my < 550+50)
-        {
-            gameState = REGISTER;
-            name[0] = password[0] = password2[0] = 0;
-            nameInd = passwordInd = 0;
-            takingUserName = true, takingPassword = false;
-        }
-        if (leftClick && mx > 528 && mx < 835 && my > 385 && my < 435) takingUserName = true, takingPassword = false;
-        else if (leftClick && mx > 528 && mx < 835 && my > 310 && my < 360) takingPassword = true, takingUserName = false;
-        break;
+        case LOG_IN:
+            simulateLogIn(mx, my);
+            break;
 
-    case REGISTER:
-        if (leftClick && mx > 490 && mx < 490+220 && my > 550 && my < 550+50)
-        {
-            gameState = LOG_IN;
-            name[0] = password[0] = password2[0] = 0;
-            nameInd = passwordInd = 0;
-            takingUserName = true, takingPassword = false;
-        }
-        if (leftClick && mx > 528 && mx < 835 && my > 385 && my < 435) takingUserName = true, takingPassword = false;
-        else if (leftClick && mx > 528 && mx < 835 && my > 310 && my < 360) takingPassword = true, takingUserName = false;
-        break;
+        case REGISTER:
+            simulateRegister(mx, my);
+            break;
 
-    case MAIN_MENU:
-        if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY && my > menuY-menuH) gameState = NEW_GAME, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-menuH-menuP && my > menuY-2*menuH-menuP) gameState = SETTINGS, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-2*menuH-2*menuP && my > menuY-3*menuH-2*menuP) incUser = 0, curStat = 0, gameState = STATISTICS, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-3*menuH-3*menuP && my > menuY-4*menuH-3*menuP) gameState = ABOUT, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-4*menuH-4*menuP && my > menuY-5*menuH-4*menuP) exitGame();
-        else if (leftClick && mx > 1025 && mx < 1025+160 && my > 75 && my < 75+50) saveSettings(), gameState = LOG_IN, playSound(7);
-        break;
+        case MAIN_MENU:
+            simulateMainMenu(mx, my);
+            break;
 
-    case RESUME_MENU:
-        if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY && my > resumeY-menuH) gameState = IN_GAME, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-menuH-menuP && my > resumeY-2*menuH-menuP) gameState = NEW_GAME, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-2*menuH-2*menuP && my > resumeY-3*menuH-2*menuP) gameState = SETTINGS, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-3*menuH-3*menuP && my > resumeY-4*menuH-3*menuP) incUser = 0, curStat = 0, gameState = STATISTICS, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-4*menuH-4*menuP && my > resumeY-5*menuH-4*menuP) gameState = ABOUT, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-5*menuH-5*menuP && my > resumeY-6*menuH-5*menuP) exitGame();
-        else if (leftClick && mx > 1025 && mx < 1025+160 && my > 75 && my < 75+50) saveSettings(), gameState = LOG_IN, playSound(7);
-        break;
+        case RESUME_MENU:
+            simulateResumeMenu(mx, my);
+            break;
 
-    case SETTINGS:
-        if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = (canResume ? RESUME_MENU : MAIN_MENU), playSound(7);
-        else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY && my > menuY-menuH) theme = 1-theme, playSound(7);
-        else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-setH-setP && my > menuY-2*menuH-setP) music = !music, playSound(7);
-        else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-2*setH-2*setP && my > menuY-3*menuH-2*setP) autoChord = !autoChord, playSound(7);
-        else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-3*setH-3*setP && my > menuY-4*menuH-3*setP) animation = !animation, playSound(7);
-        break;
+        case SETTINGS:
+            simulateSettings(mx, my);
+            break;
 
-    case STATISTICS:
-        if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = (canResume ? RESUME_MENU : MAIN_MENU), playSound(7);
-        else if (leftClick && incUser == 0 && mx > resetX && mx < resetX+statW && my > resetY && my < resetY+statH) resetStat(), playSound(7);
-        else if (leftClick && mx > statX && mx < statX+statW && my > statY && my < statY+statH) curStat = 1, playSound(7);
-        else if (leftClick && mx > statX-statW-statP && mx < statX-statP && my > statY && my < statY+statH) curStat = 0, playSound(7);
-        else if (leftClick && mx > statX+statW+statP && mx < statX+2*statW+statP && my > statY && my < statY+statH) curStat = 2, playSound(7);
-        else if (leftClick && curUser+incUser > 0 && mx > 50 && mx < 50+50 && my > 650 && my < 650+50) incUser--;
-        else if (leftClick && curUser+incUser < userCount-1 && mx > 1100 && mx < 1100+50 && my > 650 && my < 650+50) incUser++;
-        break;
+        case STATISTICS:
+            simulateStatistics(mx, my);
+            break;
 
-    case ABOUT:
-        if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = (canResume ? RESUME_MENU : MAIN_MENU), playSound(7);
-        break;
-    
-    case NEW_GAME:
-        if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = (canResume ? RESUME_MENU : MAIN_MENU), playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < newGameY && my > newGameY-menuH) setup(&EASY);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < newGameY-menuH-menuP && my > newGameY-2*menuH-menuP) setup(&MEDIUM);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < newGameY-2*menuH-2*menuP && my > newGameY-3*menuH-2*menuP) setup(&HARD);
-        break;
+        case ABOUT:
+            simulateAbout(mx, my);
+            break;
+        
+        case NEW_GAME:
+            simulateNewGame(mx, my);
+            break;
 
-    case IN_GAME:
-        if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = (canResume ? RESUME_MENU : MAIN_MENU), playSound(7);
-        else if ((leftClick || rightClick) && firstClick) safeFirstClick(mx, my, leftClick, rightClick);
-        else simulate(mx, my, leftClick, rightClick);
-        break;
+        case IN_GAME:
+            simulateInGame(mx, my);
+            break;
 
-    case GAME_WON:
-    case GAME_LOST:
-        if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = MAIN_MENU, playSound(7);
-        break;
+        case GAME_WON:
+        case GAME_LOST:
+            simulateGameOver(mx, my);
+            break;
     }
 }
 
-
-
 void iKeyboard(unsigned char key)
 {
-    if (takingUserName)
+    if (takingUserName) 
     {
-        if (key == '\r') takingUserName = false, takingPassword = true;
-
-        else if (key == '\b') 
-        {
+        if (key == '\r') {
+            takingUserName = false;
+            takingPassword = true;
+        }
+        else if (key == '\b') {
             nameInd--;
             if (nameInd < 0) nameInd = 0;
             name[nameInd] = 0;
         }
-        else if (nameInd < 24)
-        {
+        else if (nameInd < 24) {
             name[nameInd++] = key;
             name[nameInd] = 0;
         }
     }
 
-    else if (takingPassword)
+    else if (takingPassword) 
     {
-        if (key == '\r') takingPassword = false;
-
-        else if (key == '\b')
-        {
+        if (key == '\r') {
+            takingPassword = false;
+        }
+        else if (key == '\b') {
             passwordInd--;
             if (passwordInd < 0) passwordInd = 0;
             password[passwordInd] = password2[passwordInd] = 0;
         }
-        else if (passwordInd < 24)
-        {
+        else if (passwordInd < 24) {
             password[passwordInd] = key;
             password2[passwordInd] = '*';
             passwordInd++;
@@ -212,9 +181,10 @@ void iKeyboard(unsigned char key)
     }
 }
 
-void iSpecialKeyboard(unsigned char key){}
 
+void iSpecialKeyboard(unsigned char key){}
 void iMouseMove(int mx, int my) {}
+
 
 int main(int argc, char **argv)
 {
@@ -283,7 +253,7 @@ void showStat()
 {
     iSetColor(0, 0, 0);
 
-    iText(570, 662, userList[curUser+incUser]._name, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(nameBox2X, nameBox2Y, userList[curUser+incUser]._name, GLUT_BITMAP_TIMES_ROMAN_24);
 
     sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].gamesPlayed);
     iText(stat2X, stat2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
@@ -292,7 +262,9 @@ void showStat()
     iText(stat2X, stat2Y-stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
     int t = 0;
-    if (userStats[curUser+incUser].stats[curStat].gamesPlayed) t = userStats[curUser+incUser].stats[curStat].gamesWon*100 / userStats[curUser+incUser].stats[curStat].gamesPlayed;
+    if (userStats[curUser+incUser].stats[curStat].gamesPlayed) {
+        t = userStats[curUser+incUser].stats[curStat].gamesWon*100 / userStats[curUser+incUser].stats[curStat].gamesPlayed;
+    }
     sprintf(str, "%03d", t);
     iText(stat2X, stat2Y-2*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
@@ -308,7 +280,8 @@ void showStat()
     for (t = 0; t < 5; t++)
     {
         if (userStats[curUser+incUser].stats[curStat].score[t].score_ == __INT_MAX__) break;
-        sprintf(str, "%03d %30s", userStats[curUser+incUser].stats[curStat].score[t].score_, userStats[curUser+incUser].stats[curStat].score[t].date_);
+        sprintf(str, "%03d %30s", userStats[curUser+incUser].stats[curStat].score[t].score_, 
+                                userStats[curUser+incUser].stats[curStat].score[t].date_);
         iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
     }
 
@@ -331,25 +304,35 @@ void controlTimers()
 void showLoginScreen()
 {
     iShowBMP(0, 0, IMAGE[theme][29]); //login page
-    iShowBMP(490, 550, IMAGE[theme][32]); //register
-    if (takingUserName) iShowBMP2(840, 393, IMAGE[theme][30], 0);
-    if (takingPassword) iShowBMP2(840, 318, IMAGE[theme][30], 0); 
+    iShowBMP(loginX, loginY, IMAGE[theme][32]); //register
+
+    if (takingUserName) {
+        iShowBMP2(pointerX, pointerY1, IMAGE[theme][30], 0); //pointer
+    }
+    if (takingPassword) {
+        iShowBMP2(pointerX, pointerY2, IMAGE[theme][30], 0); //pointer
+    }
 
     iSetColor(0, 0, 0);
-    iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
-    iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(nameX, nameY, name, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(passwordX, passwordY, password2, GLUT_BITMAP_TIMES_ROMAN_24);
 }
 
 void showRegisterScreen()
 {
     iShowBMP(0, 0, IMAGE[theme][29]); //login page
-    iShowBMP(490, 550, IMAGE[theme][31]); //login
-    if (takingUserName) iShowBMP2(840, 393, IMAGE[theme][30], 0);
-    if (takingPassword) iShowBMP2(840, 318, IMAGE[theme][30], 0); 
+    iShowBMP(loginX, loginY, IMAGE[theme][31]); //login
+
+    if (takingUserName) {
+        iShowBMP2(pointerX, pointerY1, IMAGE[theme][30], 0); //pointer
+    }
+    if (takingPassword) {
+        iShowBMP2(pointerX, pointerY2, IMAGE[theme][30], 0); //pointer
+    }
 
     iSetColor(0, 0, 0);
-    iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
-    iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(nameX, nameY, name, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(passwordX, passwordY, password2, GLUT_BITMAP_TIMES_ROMAN_24);
 }
 
 void showMainMenu()
@@ -360,7 +343,7 @@ void showMainMenu()
     iShowBMP(menuX, menuY - 3*menuH - 2*menuP, IMAGE[theme][4]); //stats
     iShowBMP(menuX, menuY - 4*menuH - 3*menuP, IMAGE[theme][5]); //about
     iShowBMP(menuX, menuY - 5*menuH - 4*menuP, IMAGE[theme][6]); //exit
-    iShowBMP(1025, 75, IMAGE[theme][33]); //logout
+    iShowBMP(logoutX, logoutY, IMAGE[theme][33]); //logout
 }
 
 void showResumeMenu()
@@ -372,7 +355,7 @@ void showResumeMenu()
     iShowBMP(menuX, resumeY - 4*menuH - 3*menuP, IMAGE[theme][4]); //stats
     iShowBMP(menuX, resumeY - 5*menuH - 4*menuP, IMAGE[theme][5]); //about
     iShowBMP(menuX, resumeY - 6*menuH - 5*menuP, IMAGE[theme][6]); //exit
-    iShowBMP(1025, 75, IMAGE[theme][33]); //logout
+    iShowBMP(logoutX, logoutY, IMAGE[theme][33]); //logout
 }
 
 void showStatisticsScreen()
@@ -383,9 +366,15 @@ void showStatisticsScreen()
     iShowBMP(statX-statW-statP, statY, IMAGE[theme][25]); //statEasy
     iShowBMP(statX+statW+statP, statY, IMAGE[theme][27]); //statHard
 
-    if(incUser == 0) iShowBMP(resetX, resetY, IMAGE[theme][14]); //reset
-    if (curUser+incUser > 0) iShowBMP2(50, 650, IMAGE[theme][35], 0); //leftarrow
-    if (curUser+incUser < userCount-1) iShowBMP2(1100, 650, IMAGE[theme][34], 0); //rightarrow
+    if(incUser == 0) {
+        iShowBMP(resetX, resetY, IMAGE[theme][14]); //reset
+    }
+    if (curUser+incUser > 0) {
+        iShowBMP2(50, 650, IMAGE[theme][35], 0); //leftarrow
+    }
+    if (curUser+incUser < userCount-1) {
+        iShowBMP2(1100, 650, IMAGE[theme][34], 0); //rightarrow
+    }
 
     showStat();
 }
@@ -515,5 +504,209 @@ void showGameLostScreen()
                 iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]); //blank
             }
         }
+    }
+}
+
+
+void simulateLogIn(int mx, int my)
+{
+    if (leftClick && mx > loginX && mx < loginX+loginW && my > loginY && my < loginY+loginH) {
+        name[0] = password[0] = password2[0] = 0;
+        nameInd = passwordInd = 0;
+        takingUserName = true;
+        takingPassword = false;
+        gameState = REGISTER;
+    }
+    else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > nameBoxY && my < nameBoxY2) {
+        takingUserName = true, takingPassword = false;
+    }
+    else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > passwordBoxY && my < passwordBoxY2) {
+        takingPassword = true, takingUserName = false;
+    }
+}
+
+void simulateRegister(int mx, int my)
+{
+    if (leftClick && mx > loginX && mx < loginX+loginW && my > loginY && my < loginY+loginH) {
+        name[0] = password[0] = password2[0] = 0;
+        nameInd = passwordInd = 0;
+        takingUserName = true;
+        takingPassword = false;
+        gameState = LOG_IN;
+    }
+    else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > nameBoxY && my < nameBoxY2) {
+        takingUserName = true;
+        takingPassword = false;
+    }
+    else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > passwordBoxY && my < passwordBoxY2) {
+        takingPassword = true;
+        takingUserName = false;
+    }
+}
+
+void simulateMainMenu(int mx, int my)
+{
+    if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY && my > menuY-menuH) {
+        gameState = NEW_GAME;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-menuH-menuP && my > menuY-2*menuH-menuP) {
+        gameState = SETTINGS;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-2*menuH-2*menuP && my > menuY-3*menuH-2*menuP) {
+        incUser = 0;
+        curStat = 0;
+        gameState = STATISTICS;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-3*menuH-3*menuP && my > menuY-4*menuH-3*menuP) {
+        gameState = ABOUT;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-4*menuH-4*menuP && my > menuY-5*menuH-4*menuP) {
+        exitGame();
+    }
+    else if (leftClick && mx > logoutX && mx < logoutX+logoutW && my > logoutY && my < logoutY+logoutH) {
+        saveSettings();
+        gameState = LOG_IN;
+        playSound(7);
+    }
+}
+
+void simulateResumeMenu(int mx, int my)
+{
+    if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY && my > resumeY-menuH) {
+        gameState = IN_GAME;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-menuH-menuP && my > resumeY-2*menuH-menuP) {
+        gameState = NEW_GAME;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-2*menuH-2*menuP && my > resumeY-3*menuH-2*menuP) {
+        gameState = SETTINGS;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-3*menuH-3*menuP && my > resumeY-4*menuH-3*menuP) {
+        incUser = 0;
+        curStat = 0;
+        gameState = STATISTICS;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-4*menuH-4*menuP && my > resumeY-5*menuH-4*menuP) {
+        gameState = ABOUT;
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-5*menuH-5*menuP && my > resumeY-6*menuH-5*menuP) {
+        exitGame();
+    }
+    else if (leftClick && mx > logoutX && mx < logoutX+logoutW && my > logoutY && my < logoutY+logoutH) {
+        saveSettings();
+        gameState = LOG_IN;
+        playSound(7);
+    }
+}
+
+void simulateSettings(int mx, int my)
+{
+    if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) {
+        gameState = (canResume ? RESUME_MENU : MAIN_MENU);
+        playSound(7);
+    }
+    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY && my > menuY-menuH) {
+        theme = 1-theme;
+        playSound(7);
+    }
+    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-setH-setP && my > menuY-2*menuH-setP) {
+        music = !music;
+        playSound(7);
+    }
+    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-2*setH-2*setP && my > menuY-3*menuH-2*setP) {
+        autoChord = !autoChord;
+        playSound(7);
+    }
+    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-3*setH-3*setP && my > menuY-4*menuH-3*setP) {
+        animation = !animation;
+        playSound(7);
+    }
+}
+
+void simulateStatistics(int mx, int my)
+{
+    if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) {
+        gameState = (canResume ? RESUME_MENU : MAIN_MENU);
+        playSound(7);
+    }
+    else if (leftClick && incUser == 0 && mx > resetX && mx < resetX+statW && my > resetY && my < resetY+statH) {
+        resetStat();
+        playSound(7);
+    }
+    else if (leftClick && mx > statX && mx < statX+statW && my > statY && my < statY+statH) {
+        curStat = 1;
+        playSound(7);
+    }
+    else if (leftClick && mx > statX-statW-statP && mx < statX-statP && my > statY && my < statY+statH) {
+        curStat = 0;
+        playSound(7);
+    }
+    else if (leftClick && mx > statX+statW+statP && mx < statX+2*statW+statP && my > statY && my < statY+statH) {
+        curStat = 2;
+        playSound(7);
+    }
+    else if (leftClick && curUser+incUser > 0 && 
+            mx > leftarrowX && mx < leftarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
+        incUser--;
+    }
+    else if (leftClick && curUser+incUser < userCount-1 && 
+            mx > rightarrowX && mx < rightarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
+        incUser++;
+    }
+}
+
+void simulateAbout(int mx, int my)
+{
+    if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) {
+        gameState = (canResume ? RESUME_MENU : MAIN_MENU);
+        playSound(7);
+    }
+}
+
+void simulateNewGame(int mx, int my)
+{
+    if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) {
+        gameState = (canResume ? RESUME_MENU : MAIN_MENU);
+        playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < newGameY && my > newGameY-menuH) {
+        setup(&EASY);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < newGameY-menuH-menuP && my > newGameY-2*menuH-menuP) {
+        setup(&MEDIUM);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < newGameY-2*menuH-2*menuP && my > newGameY-3*menuH-2*menuP) {
+        setup(&HARD);
+    }
+}
+
+void simulateInGame(int mx, int my)
+{
+    if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) {
+        gameState = (canResume ? RESUME_MENU : MAIN_MENU);
+        playSound(7);
+    }
+    else if ((leftClick || rightClick) && firstClick) {
+        safeFirstClick(mx, my, leftClick, rightClick);
+    }
+    else {
+        simulateGameplay(mx, my, leftClick, rightClick);
+    }
+}
+
+void simulateGameOver(int mx, int my)
+{
+    if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) {
+        gameState = MAIN_MENU;
+        playSound(7);
     }
 }

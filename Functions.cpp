@@ -5,7 +5,7 @@ void setup(_difficulty *mode_);
 
 void leftClickOnDefault(int i, int j);
 void leftClickOnExposed(int i, int j);
-void simulate(int mx, int my, bool leftClick, bool rightClick);
+void simulateGameplay(int mx, int my, bool leftClick, bool rightClick);
 void safeFirstClick(int mx, int my, bool leftClick, bool rightClick);
 
 void gameWonStatChange();
@@ -82,7 +82,7 @@ void setup(_difficulty *mode_)
 	}
 }
 
-void simulate(int mx, int my, bool leftClick, bool rightClick)
+void simulateGameplay(int mx, int my, bool leftClick, bool rightClick)
 {
     int i = (mx - mode.x) / mode.w, j = (my - mode.y) / mode.w;
     if (leftClick && i >= 0 && i < mode.col && j >= 0 && j < mode.row)
@@ -204,7 +204,7 @@ void safeFirstClick(int mx, int my, bool leftClick, bool rightClick)
             }
         }
     }
-    simulate(mx, my, leftClick, rightClick);
+    simulateGameplay(mx, my, leftClick, rightClick);
 }
 
 void getSettings()
