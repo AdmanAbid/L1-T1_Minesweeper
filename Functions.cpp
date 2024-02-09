@@ -40,6 +40,7 @@ void writeUserData();
 void readUserStats();
 void writeUserStats();
 
+void setupLogin();
 
 void setup(_difficulty *mode_)
 {
@@ -210,6 +211,7 @@ void getSettings()
 {
     readUserData();
     readUserStats();
+
     theme = userStats[curUser].settings.theme_;
     music = userStats[curUser].settings.music_;
     animation = userStats[curUser].settings.animation_;
@@ -218,17 +220,12 @@ void getSettings()
 
 void saveSettings()
 {
-    readUserStats();
-    // savedSettings.theme_ = theme;
-    // savedSettings.music_ = music;
-    // savedSettings.animation_ = animation;
-    // savedSettings.autoChord_ = autoChord;
-
     userStats[curUser].settings.theme_ = theme;
     userStats[curUser].settings.music_ = music;
     userStats[curUser].settings.animation_ = animation;
     userStats[curUser].settings.autoChord_ = autoChord;
 
+    writeUserData();
     writeUserStats();
 }
 
@@ -349,6 +346,7 @@ void exitGame()
 
 void readUserData()
 {
+    free(userList);
     FILE *fp = fopen("UserData.txt", "rb");
     if (fp)
     {
@@ -393,16 +391,28 @@ void addNewUser()
     strcpy(userList[userCount]._password, password);
     curUser = userCount;
     userCount++;
-    writeUserData();
+
+    userStats[curUser].settings.animation_ = animation;
+    userStats[curUser].settings.autoChord_ = autoChord;
+    userStats[curUser].settings.music_ = music;
+    userStats[curUser].settings.theme_ = theme;
+
+    for (int i = 0; i < 3; i++)
+    {
+        curStat = i;
+        resetStat();
+    }
 
     gameState = MAIN_MENU;
     name[0] = password[0] = password2[0] = 0;
     nameInd = passwordInd = 0;
     takingUserName = true, takingPassword = false;
 
-    freeUserData();
-    readUserData();
+    writeUserData();
+    writeUserStats();
 
+    readUserData();
+    readUserStats();
 }
 
 void writeUserData()
@@ -423,6 +433,7 @@ void writeUserData()
 
 void readUserStats()
 {
+    free(userStats);
     FILE *fp = fopen("GameData.txt", "rb");
     if (fp)
     {
@@ -450,4 +461,15 @@ void writeUserStats()
         printf("Error opening file for writing.\n");
         exit(1);
     }
+}
+
+void setupLogin()
+{
+    readUserData();
+    readUserStats();
+
+    theme = 1;
+    music = false;
+    animation = false;
+    autoChord = false;
 }

@@ -3,154 +3,79 @@
 #include "Functions.cpp"
 
 void showStat();
-void printText();
-void printText2();
+void showTimeAndMineLeft();
+void showFInalTime();
 void showNum(int i, int j);
+void controlTimers();
+
+void showLoginScreen();
+void showRegisterScreen();
+void showMainMenu();
+void showResumeMenu();
+void showStatisticsScreen();
+void showNewGameScreen();
+void showSettingsScreen();
+void showAboutScreen();
+void showInGameScreen();
+void showGameWonScreen();
+void showGameLostScreen();
 
 void iDraw()
 {
     iClear();
-
-    if (gameState == IN_GAME) iResumeTimer(t1);
-    else iPauseTimer(t1);
-
-    if (animation && gameState == GAME_LOST) iResumeTimer(t2);
-    else iPauseTimer(t2);
-
-    if (animation && gameState == GAME_WON) iResumeTimer(t3);
-    else iPauseTimer(t3);
+    controlTimers();
 
     switch (gameState)
     {
-    case LOG_IN:
-        iShowBMP(0, 0, IMAGE[theme][29]); //login page
-        iShowBMP(490, 550, IMAGE[theme][32]); //register
-        if (takingUserName) iShowBMP2(840, 393, IMAGE[theme][30], 0);
-        if (takingPassword) iShowBMP2(840, 318, IMAGE[theme][30], 0); 
-
-        iSetColor(0, 0, 0);
-        iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
-        iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
-        break;
-
-    case REGISTER:
-        iShowBMP(0, 0, IMAGE[theme][29]); //login page
-        iShowBMP(490, 550, IMAGE[theme][31]); //login
-        if (takingUserName) iShowBMP2(840, 393, IMAGE[theme][30], 0);
-        if (takingPassword) iShowBMP2(840, 318, IMAGE[theme][30], 0); 
-
-        iSetColor(0, 0, 0);
-        iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
-        iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
-        if (!takingPassword && !takingUserName) addNewUser();
-        break;
-
-    case MAIN_MENU:
-        iShowBMP(0, 0, IMAGE[theme][0]); //background
-        iShowBMP(menuX, menuY - menuH, IMAGE[theme][2]); //newgame
-        iShowBMP(menuX, menuY - 2*menuH - menuP, IMAGE[theme][3]); //settings
-        iShowBMP(menuX, menuY - 3*menuH - 2*menuP, IMAGE[theme][4]); //stats
-        iShowBMP(menuX, menuY - 4*menuH - 3*menuP, IMAGE[theme][5]); //about
-        iShowBMP(menuX, menuY - 5*menuH - 4*menuP, IMAGE[theme][6]); //exit
-        iShowBMP(1025, 75, IMAGE[theme][33]); //logout
-        break;
-
-    case RESUME_MENU:
-        iShowBMP(0, 0, IMAGE[theme][0]); //background
-        iShowBMP(menuX, resumeY - menuH, IMAGE[theme][1]); //resume
-        iShowBMP(menuX, resumeY - 2*menuH - menuP, IMAGE[theme][2]); //newgame
-        iShowBMP(menuX, resumeY - 3*menuH - 2*menuP, IMAGE[theme][3]); //settings
-        iShowBMP(menuX, resumeY - 4*menuH - 3*menuP, IMAGE[theme][4]); //stats
-        iShowBMP(menuX, resumeY - 5*menuH - 4*menuP, IMAGE[theme][5]); //about
-        iShowBMP(menuX, resumeY - 6*menuH - 5*menuP, IMAGE[theme][6]); //exit
-        iShowBMP(1025, 75, IMAGE[theme][33]); //logout
-        break;
-
-    case NEW_GAME:
-        iShowBMP(0, 0, IMAGE[theme][0]); //background
-        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        iShowBMP(menuX, newGameY - menuH, IMAGE[theme][7]); //easy
-        iShowBMP(menuX, newGameY - 2*menuH - menuP, IMAGE[theme][8]); //medium
-        iShowBMP(menuX, newGameY - 3*menuH - 2*menuP, IMAGE[theme][9]); //hard
-        break;
-    
-    case SETTINGS:
-        iShowBMP(0, 0, IMAGE[theme][0]); //background
-        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        iShowBMP(setX, setY - setH, IMAGE[theme][15]); //theme
-        iShowBMP(setX, setY - 2*setH - setP, IMAGE[theme][16]); //sound
-        iShowBMP(setX, setY - 3*setH - 2*setP, IMAGE[theme][17]); //chord
-        iShowBMP(setX, setY - 4*setH - 3*setP, IMAGE[theme][19]); //animation
-        iShowBMP(setX2, setY - setH, IMAGE[theme][18]); //light/dark
-        if (music) iShowBMP(setX2, setY - 2*setH - setP, IMAGE[theme][20]); //on
-        else iShowBMP(setX2, setY - 2*setH - setP, IMAGE[theme][21]); //off
-        if (autoChord) iShowBMP(setX2, setY - 3*setH - 2*setP, IMAGE[theme][23]); //auto
-        else iShowBMP(setX2, setY - 3*setH - 2*setP, IMAGE[theme][22]); //click
-        if (animation) iShowBMP(setX2, setY - 4*setH - 3*setP, IMAGE[theme][20]); //on
-        else iShowBMP(setX2, setY - 4*setH - 3*setP, IMAGE[theme][21]); //off
-        break;
-
-    case STATISTICS:
-        iShowBMP(0, 0, IMAGE[theme][24]); //statScreen
-        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        iShowBMP(resetX, resetY, IMAGE[theme][14]); //reset
-        iShowBMP(statX, statY, IMAGE[theme][26]); //statMedium
-        iShowBMP(statX-statW-statP, statY, IMAGE[theme][25]); //statEasy
-        iShowBMP(statX+statW+statP, statY, IMAGE[theme][27]); //statHard
-        showStat();
-        break;
-
-    case ABOUT:
-        iShowBMP(0, 0, IMAGE[theme][28]); //aboutScreen
-        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        break;
-    
-    case IN_GAME:
-        iShowBMP(0, 0, IMAGE[theme][0]); //background
-        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        for (int i = 0; i < mode.col; i++){
-            for (int j = 0; j < mode.row; j++){
-                if (board[i][j].state == DEFAULT) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]); //blank
-                else if (board[i][j].state == FLAGGED) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]); //flag
-                else if (board[i][j].state == EXPOSED) showNum(i, j);
+        case LOG_IN:
+            showLoginScreen();
+            if (!takingPassword && !takingUserName) {
+                checkUserPassword();
             }
-        }
-        printText();
-        break;
+            break;
 
-    case GAME_WON:
-        iShowBMP(0, 0, IMAGE[theme][0]); //background
-        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        printText2();
-        for (int i = 0; i < mode.col; i++){
-            for (int j = 0; j < mode.row; j++){
-                if (board[i][j].isMine)
-                {
-                    if (!animation) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); // mine
-                    else if (board[i][j].visited) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); // mine
-                    else iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]); //flag
-                }
-                else showNum(i, j);
+        case REGISTER:
+            showRegisterScreen();
+            if (!takingPassword && !takingUserName) {
+                addNewUser();
             }
-        }
-        if (isRecord) iShowBMP(winX, winY, IMAGE[theme][12]); //newrecord
-        else iShowBMP(winX, winY, IMAGE[theme][10]); //youwin
-        break;
+            break;
 
-    case GAME_LOST:
-        iShowBMP(0, 0, IMAGE[theme][0]); //background
-        iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-        iShowBMP(winX, winY, IMAGE[theme][11]); //youlose
-        for (int i = 0; i < mode.col; i++){
-            for (int j = 0; j < mode.row; j++){
-                if (board[i][j].isMine && board[i][j].visited) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][2]); //exmine
-                else if (board[i][j].isMine && !board[i][j].visited) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); //mine
-                else if (board[i][j].state == FLAGGED) iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]); //flag
-                else if (board[i][j].state == EXPOSED) showNum(i, j);
-                else iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]); //blank
-            }
-        }
-        break;
+        case MAIN_MENU:
+            showMainMenu();
+            break;
+
+        case RESUME_MENU:
+            showResumeMenu();
+            break;
+
+        case NEW_GAME:
+            showNewGameScreen();
+            break;
+        
+        case SETTINGS:
+            showSettingsScreen();
+            break;
+
+        case STATISTICS:
+            showStatisticsScreen();
+            break;
+
+        case ABOUT:
+            showAboutScreen();
+            break;
+        
+        case IN_GAME:
+            showInGameScreen();
+            break;
+
+        case GAME_WON:
+            showGameWonScreen();
+            break;
+
+        case GAME_LOST:
+            showGameLostScreen();
+            break;
     }
 }
 
@@ -188,20 +113,20 @@ void iMouse(int button, int state, int mx, int my)
     case MAIN_MENU:
         if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY && my > menuY-menuH) gameState = NEW_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-menuH-menuP && my > menuY-2*menuH-menuP) gameState = SETTINGS, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-2*menuH-2*menuP && my > menuY-3*menuH-2*menuP) gameState = STATISTICS, playSound(7);
+        else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-2*menuH-2*menuP && my > menuY-3*menuH-2*menuP) incUser = 0, curStat = 0, gameState = STATISTICS, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-3*menuH-3*menuP && my > menuY-4*menuH-3*menuP) gameState = ABOUT, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-4*menuH-4*menuP && my > menuY-5*menuH-4*menuP) exitGame();
-        else if (leftClick && mx > 1025 && mx < 1025+160 && my > 75 && my < 75+50) gameState = LOG_IN, playSound(7);
+        else if (leftClick && mx > 1025 && mx < 1025+160 && my > 75 && my < 75+50) saveSettings(), gameState = LOG_IN, playSound(7);
         break;
 
     case RESUME_MENU:
         if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY && my > resumeY-menuH) gameState = IN_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-menuH-menuP && my > resumeY-2*menuH-menuP) gameState = NEW_GAME, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-2*menuH-2*menuP && my > resumeY-3*menuH-2*menuP) gameState = SETTINGS, playSound(7);
-        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-3*menuH-3*menuP && my > resumeY-4*menuH-3*menuP) gameState = STATISTICS, playSound(7);
+        else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-3*menuH-3*menuP && my > resumeY-4*menuH-3*menuP) incUser = 0, curStat = 0, gameState = STATISTICS, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-4*menuH-4*menuP && my > resumeY-5*menuH-4*menuP) gameState = ABOUT, playSound(7);
         else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-5*menuH-5*menuP && my > resumeY-6*menuH-5*menuP) exitGame();
-        else if (leftClick && mx > 1025 && mx < 1025+160 && my > 75 && my < 75+50) gameState = LOG_IN, playSound(7);
+        else if (leftClick && mx > 1025 && mx < 1025+160 && my > 75 && my < 75+50) saveSettings(), gameState = LOG_IN, playSound(7);
         break;
 
     case SETTINGS:
@@ -214,10 +139,12 @@ void iMouse(int button, int state, int mx, int my)
 
     case STATISTICS:
         if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) gameState = (canResume ? RESUME_MENU : MAIN_MENU), playSound(7);
-        else if (leftClick && mx > resetX && mx < resetX+statW && my > resetY && my < resetY+statH) resetStat(), playSound(7);
+        else if (leftClick && incUser == 0 && mx > resetX && mx < resetX+statW && my > resetY && my < resetY+statH) resetStat(), playSound(7);
         else if (leftClick && mx > statX && mx < statX+statW && my > statY && my < statY+statH) curStat = 1, playSound(7);
         else if (leftClick && mx > statX-statW-statP && mx < statX-statP && my > statY && my < statY+statH) curStat = 0, playSound(7);
         else if (leftClick && mx > statX+statW+statP && mx < statX+2*statW+statP && my > statY && my < statY+statH) curStat = 2, playSound(7);
+        else if (leftClick && curUser+incUser > 0 && mx > 50 && mx < 50+50 && my > 650 && my < 650+50) incUser--;
+        else if (leftClick && curUser+incUser < userCount-1 && mx > 1100 && mx < 1100+50 && my > 650 && my < 650+50) incUser++;
         break;
 
     case ABOUT:
@@ -283,7 +210,6 @@ void iKeyboard(unsigned char key)
             password[passwordInd] = password2[passwordInd] = 0;
         }
     }
-    if (!takingPassword && !takingUserName) checkUserPassword();
 }
 
 void iSpecialKeyboard(unsigned char key){}
@@ -293,7 +219,7 @@ void iMouseMove(int mx, int my) {}
 int main(int argc, char **argv)
 {
     initiateGame();
-    getSettings();
+    setupLogin();
     iInitialize(screenWidth, screenHeight, "Minesweeper");
     return 0;
 }
@@ -332,7 +258,7 @@ void showNum(int i, int j)
     }
 }
 
-void printText()
+void showTimeAndMineLeft()
 {
     if (theme == 0) iSetColor(0, 0, 255);
     else iSetColor(255, 255, 255);
@@ -344,7 +270,7 @@ void printText()
     iText(text2X, text2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
 }
 
-void printText2()
+void showFInalTime()
 {
     if (theme == 0) iSetColor(0, 0, 255);
     else iSetColor(255, 255, 255);
@@ -357,33 +283,237 @@ void showStat()
 {
     iSetColor(0, 0, 0);
 
-    sprintf(str, "%03d", userStats[curUser].stats[curStat].gamesPlayed);
+    iText(570, 662, userList[curUser+incUser]._name, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].gamesPlayed);
     iText(stat2X, stat2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
-    sprintf(str, "%03d", userStats[curUser].stats[curStat].gamesWon);
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].gamesWon);
     iText(stat2X, stat2Y-stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
     int t = 0;
-    if (userStats[curUser].stats[curStat].gamesPlayed) t = userStats[curUser].stats[curStat].gamesWon*100 / userStats[curUser].stats[curStat].gamesPlayed;
+    if (userStats[curUser+incUser].stats[curStat].gamesPlayed) t = userStats[curUser+incUser].stats[curStat].gamesWon*100 / userStats[curUser+incUser].stats[curStat].gamesPlayed;
     sprintf(str, "%03d", t);
     iText(stat2X, stat2Y-2*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
-    sprintf(str, "%03d", userStats[curUser].stats[curStat].maxWinning);
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].maxWinning);
     iText(stat2X, stat2Y-3*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
-    sprintf(str, "%03d", userStats[curUser].stats[curStat].maxLosing);
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].maxLosing);
     iText(stat2X, stat2Y-4*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
-    sprintf(str, "%03d", userStats[curUser].stats[curStat].currentWinning);
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].currentWinning);
     iText(stat2X, stat2Y-5*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 
     for (t = 0; t < 5; t++)
     {
-        if (userStats[curUser].stats[curStat].score[t].score_ == __INT_MAX__) break;
-        sprintf(str, "%03d %30s", userStats[curUser].stats[curStat].score[t].score_, userStats[curUser].stats[curStat].score[t].date_);
+        if (userStats[curUser+incUser].stats[curStat].score[t].score_ == __INT_MAX__) break;
+        sprintf(str, "%03d %30s", userStats[curUser+incUser].stats[curStat].score[t].score_, userStats[curUser+incUser].stats[curStat].score[t].date_);
         iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
     }
 
     sprintf(str, "---                 ------------");
     for (; t < 5; t++) iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
+}
+
+void controlTimers()
+{
+    if (gameState == IN_GAME) iResumeTimer(t1);
+    else iPauseTimer(t1);
+
+    if (animation && gameState == GAME_LOST) iResumeTimer(t2);
+    else iPauseTimer(t2);
+
+    if (animation && gameState == GAME_WON) iResumeTimer(t3);
+    else iPauseTimer(t3);
+}
+
+void showLoginScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][29]); //login page
+    iShowBMP(490, 550, IMAGE[theme][32]); //register
+    if (takingUserName) iShowBMP2(840, 393, IMAGE[theme][30], 0);
+    if (takingPassword) iShowBMP2(840, 318, IMAGE[theme][30], 0); 
+
+    iSetColor(0, 0, 0);
+    iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
+}
+
+void showRegisterScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][29]); //login page
+    iShowBMP(490, 550, IMAGE[theme][31]); //login
+    if (takingUserName) iShowBMP2(840, 393, IMAGE[theme][30], 0);
+    if (takingPassword) iShowBMP2(840, 318, IMAGE[theme][30], 0); 
+
+    iSetColor(0, 0, 0);
+    iText(540, 400, name, GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(540, 320, password2, GLUT_BITMAP_TIMES_ROMAN_24);
+}
+
+void showMainMenu()
+{
+    iShowBMP(0, 0, IMAGE[theme][0]); //background
+    iShowBMP(menuX, menuY - menuH, IMAGE[theme][2]); //newgame
+    iShowBMP(menuX, menuY - 2*menuH - menuP, IMAGE[theme][3]); //settings
+    iShowBMP(menuX, menuY - 3*menuH - 2*menuP, IMAGE[theme][4]); //stats
+    iShowBMP(menuX, menuY - 4*menuH - 3*menuP, IMAGE[theme][5]); //about
+    iShowBMP(menuX, menuY - 5*menuH - 4*menuP, IMAGE[theme][6]); //exit
+    iShowBMP(1025, 75, IMAGE[theme][33]); //logout
+}
+
+void showResumeMenu()
+{
+    iShowBMP(0, 0, IMAGE[theme][0]); //background
+    iShowBMP(menuX, resumeY - menuH, IMAGE[theme][1]); //resume
+    iShowBMP(menuX, resumeY - 2*menuH - menuP, IMAGE[theme][2]); //newgame
+    iShowBMP(menuX, resumeY - 3*menuH - 2*menuP, IMAGE[theme][3]); //settings
+    iShowBMP(menuX, resumeY - 4*menuH - 3*menuP, IMAGE[theme][4]); //stats
+    iShowBMP(menuX, resumeY - 5*menuH - 4*menuP, IMAGE[theme][5]); //about
+    iShowBMP(menuX, resumeY - 6*menuH - 5*menuP, IMAGE[theme][6]); //exit
+    iShowBMP(1025, 75, IMAGE[theme][33]); //logout
+}
+
+void showStatisticsScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][24]); //statScreen
+    iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+    iShowBMP(statX, statY, IMAGE[theme][26]); //statMedium
+    iShowBMP(statX-statW-statP, statY, IMAGE[theme][25]); //statEasy
+    iShowBMP(statX+statW+statP, statY, IMAGE[theme][27]); //statHard
+
+    if(incUser == 0) iShowBMP(resetX, resetY, IMAGE[theme][14]); //reset
+    if (curUser+incUser > 0) iShowBMP2(50, 650, IMAGE[theme][35], 0); //leftarrow
+    if (curUser+incUser < userCount-1) iShowBMP2(1100, 650, IMAGE[theme][34], 0); //rightarrow
+
+    showStat();
+}
+
+void showNewGameScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][0]); //background
+    iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+    iShowBMP(menuX, newGameY - menuH, IMAGE[theme][7]); //easy
+    iShowBMP(menuX, newGameY - 2*menuH - menuP, IMAGE[theme][8]); //medium
+    iShowBMP(menuX, newGameY - 3*menuH - 2*menuP, IMAGE[theme][9]); //hard
+}
+
+void showSettingsScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][0]); //background
+    iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+    iShowBMP(setX, setY - setH, IMAGE[theme][15]); //theme
+    iShowBMP(setX, setY - 2*setH - setP, IMAGE[theme][16]); //sound
+    iShowBMP(setX, setY - 3*setH - 2*setP, IMAGE[theme][17]); //chord
+    iShowBMP(setX, setY - 4*setH - 3*setP, IMAGE[theme][19]); //animation
+    iShowBMP(setX2, setY - setH, IMAGE[theme][18]); //light/dark
+
+    if (music) {
+        iShowBMP(setX2, setY - 2*setH - setP, IMAGE[theme][20]); //on
+    } else {
+        iShowBMP(setX2, setY - 2*setH - setP, IMAGE[theme][21]); //off
+    }
+    if (autoChord) {
+        iShowBMP(setX2, setY - 3*setH - 2*setP, IMAGE[theme][23]); //auto
+    } else {
+        iShowBMP(setX2, setY - 3*setH - 2*setP, IMAGE[theme][22]); //click
+    }
+    if (animation) {
+        iShowBMP(setX2, setY - 4*setH - 3*setP, IMAGE[theme][20]); //on
+    } else {
+        iShowBMP(setX2, setY - 4*setH - 3*setP, IMAGE[theme][21]); //off
+    }
+}
+
+void showAboutScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][28]); //aboutScreen
+    iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+}
+
+void showInGameScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][0]); //background
+    iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+
+    for (int i = 0; i < mode.col; i++) 
+    {
+        for (int j = 0; j < mode.row; j++) 
+        {
+            if (board[i][j].state == DEFAULT) {
+                iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]); //blank
+            }
+            else if (board[i][j].state == FLAGGED) {
+                iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]); //flag
+            }
+            else if (board[i][j].state == EXPOSED) {
+                showNum(i, j);
+            }
+        }
+    }
+    showTimeAndMineLeft();
+}
+
+void showGameWonScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][0]); //background
+    iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+    showFInalTime();
+
+    for (int i = 0; i < mode.col; i++)
+    {
+        for (int j = 0; j < mode.row; j++)
+        {
+            if (board[i][j].isMine)
+            {
+                if (!animation) {
+                    iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); // mine
+                }
+                else if (board[i][j].visited) {
+                    iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); // mine
+                }
+                else {
+                    iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]); //flag
+                }
+            }
+            else {
+                showNum(i, j);
+            }
+        }
+    }
+    if (isRecord) {
+        iShowBMP(winX, winY, IMAGE[theme][12]); //newrecord
+    } else {
+        iShowBMP(winX, winY, IMAGE[theme][10]); //youwin
+    }
+}
+
+void showGameLostScreen()
+{
+    iShowBMP(0, 0, IMAGE[theme][0]); //background
+    iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
+    iShowBMP(winX, winY, IMAGE[theme][11]); //youlose
+
+    for (int i = 0; i < mode.col; i++)
+    {
+        for (int j = 0; j < mode.row; j++)
+        {
+            if (board[i][j].isMine && board[i][j].visited) {
+                iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][2]); //exmine
+            }
+            else if (board[i][j].isMine && !board[i][j].visited) {
+                iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][1]); //mine
+            }
+            else if (board[i][j].state == FLAGGED) {
+                iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][0]); //flag
+            }
+            else if (board[i][j].state == EXPOSED) {
+                showNum(i, j);
+            }
+            else {
+                iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][3]); //blank
+            }
+        }
+    }
 }
