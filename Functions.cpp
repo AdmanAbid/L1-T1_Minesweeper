@@ -12,8 +12,8 @@ void gameWonStatChange();
 void gameLostStatChange();
 
 void resetStat();
-void getSettings();
-void saveSettings();
+void getAllData();
+void saveAllData();
 
 void exitGame();
 void deleteBoard();
@@ -33,6 +33,7 @@ void readUserData();
 void freeUserData();
 void checkUserPassword();
 void addNewUser();
+void deleteUser();
 
 void readUserData();
 void writeUserData();
@@ -41,31 +42,51 @@ void readUserStats();
 void writeUserStats();
 
 void setupLogin();
+void generateBoard();
+void generateMines();
 
 void setup(_difficulty *mode_)
 {
     playSound(6);
-    deleteBoard();
+    mode = *mode_;
     firstClick = true;
-    front = 0, back = 0;
-    flagged = 0, exposed = 0;
-    srand((unsigned int)time(NULL));
-    mode = *mode_, gameState = IN_GAME;
-    _time = 0, isRecord = false, canResume = true;
     rowCount = mode.row;
 
-	board = (_cell **)malloc(mode.col * sizeof(_cell *));
-    for (int i = 0; i < mode.col; i++) board[i] = (_cell *)malloc(mode.row * sizeof(_cell));
+    _time = 0;
+    isRecord = false;
+    canResume = true;
+    front = 0, back = 0;
+    flagged = 0, exposed = 0;
 
-    for (int i = 0; i < mode.col; i++){
-        for (int j = 0; j < mode.row; j++){
+    generateBoard();
+    generateMines();
+    gameState = IN_GAME;
+}
+
+void generateBoard()
+{
+    deleteBoard();
+
+    board = (_cell **)malloc(mode.col * sizeof(_cell *));
+    for (int i = 0; i < mode.col; i++) {
+        board[i] = (_cell *)malloc(mode.row * sizeof(_cell));
+    }
+
+    for (int i = 0; i < mode.col; i++)
+    {
+        for (int j = 0; j < mode.row; j++) 
+        {
             board[i][j].num = 0;
             board[i][j].isMine = false;
             board[i][j].visited = false;
             board[i][j].state = DEFAULT;
         }
     }
+}
 
+void generateMines()
+{
+    srand((unsigned int)time(NULL));
     for (int n = 0; n < mode.mines; n++)
 	{
 		int i, j;
@@ -77,7 +98,9 @@ void setup(_difficulty *mode_)
 		for (int k = 0; k < 8; k++)
 		{
 			int I = i + di[k], J = j + dj[k];
-			if (I >= 0 && I < mode.col && J >= 0 && J < mode.row) board[I][J].num++;
+			if (I >= 0 && I < mode.col && J >= 0 && J < mode.row) {
+                board[I][J].num++;
+            }
 		}
 	}
 }
@@ -87,19 +110,27 @@ void simulateGameplay(int mx, int my, bool leftClick, bool rightClick)
     int i = (mx - mode.x) / mode.w, j = (my - mode.y) / mode.w;
     if (leftClick && i >= 0 && i < mode.col && j >= 0 && j < mode.row)
     {
-        if (board[i][j].state == DEFAULT) playSound(2), leftClickOnDefault(i, j);
-        else if (board[i][j].state == EXPOSED && board[i][j].num != 0) playSound(0), leftClickOnExposed(i, j);
+        if (board[i][j].state == DEFAULT) {
+            playSound(2);
+            leftClickOnDefault(i, j);
+        }
+        else if (board[i][j].state == EXPOSED && board[i][j].num != 0) {
+            playSound(0);
+            leftClickOnExposed(i, j);
+        }
     }
     else if (rightClick && i >= 0 && i < mode.col && j >= 0 && j < mode.row)
     {
         if (board[i][j].state == DEFAULT)
         {
-            flagged++, playSound(4);
+            playSound(4);
+            flagged++;
             board[i][j].state = FLAGGED;
 
             if (autoChord)
             {
-                for (int k = 0; k < 8; k++){
+                for (int k = 0; k < 8; k++)
+                {
                     int I = i + di[k], J = j + dj[k];
                     if (I >= 0 && I < mode.col && J >= 0 && J < mode.row && board[I][J].state == EXPOSED)
                     {
@@ -129,7 +160,7 @@ void dfs(int i, int j)
 	for (int k = 0; k < 8; k++)
 	{
 		int I = i + di[k], J = j + dj[k];
-		if (I >= 0 && I < mode.col && J >= 0 && J < mode.row && board[I][J].state == DEFAULT){
+		if (I >= 0 && I < mode.col && J >= 0 && J < mode.row && board[I][J].state == DEFAULT) {
             exposed++;
 			board[I][J].state = EXPOSED;
 			if (board[I][J].num == 0) dfs(I, J);
@@ -207,7 +238,7 @@ void safeFirstClick(int mx, int my, bool leftClick, bool rightClick)
     simulateGameplay(mx, my, leftClick, rightClick);
 }
 
-void getSettings()
+void getAllData()
 {
     readUserData();
     readUserStats();
@@ -218,7 +249,7 @@ void getSettings()
     autoChord = userStats[curUser].settings.autoChord_;
 }
 
-void saveSettings()
+void saveAllData()
 {
     userStats[curUser].settings.theme_ = theme;
     userStats[curUser].settings.music_ = music;
@@ -234,7 +265,9 @@ void gameWonStatChange()
     userStats[curUser].stats[mode.statVal].gamesWon++;
     userStats[curUser].stats[mode.statVal].gamesPlayed++;
     userStats[curUser].stats[mode.statVal].currentLosing = 0;
-    if (++userStats[curUser].stats[mode.statVal].currentWinning > userStats[curUser].stats[mode.statVal].maxWinning) userStats[curUser].stats[mode.statVal].maxWinning++;
+    if (++userStats[curUser].stats[mode.statVal].currentWinning > userStats[curUser].stats[mode.statVal].maxWinning) {
+            userStats[curUser].stats[mode.statVal].maxWinning++;
+        }
 
     int i;
     for (i = 0; i < 5; i++) if (_time < userStats[curUser].stats[mode.statVal].score[i].score_) break;
@@ -242,13 +275,16 @@ void gameWonStatChange()
     if (i < 5)
     {
         isRecord = true;
-        for (int j = 3; j >= i; j--) userStats[curUser].stats[mode.statVal].score[j+1] = userStats[curUser].stats[mode.statVal].score[j];
+        for (int j = 3; j >= i; j--) {
+            userStats[curUser].stats[mode.statVal].score[j+1] = userStats[curUser].stats[mode.statVal].score[j];
+        }
         userStats[curUser].stats[mode.statVal].score[i].score_ = _time;
 
-        char date[20];
-
-        time_t time2; time(&time2);
+        time_t time2;
+        time(&time2);
         tm *time3 = localtime(&time2);
+
+        char date[20];
         sprintf(date, "%02d-%02d-%d", time3->tm_mday, time3->tm_mon+1, time3->tm_year+1900);
         strcpy(userStats[curUser].stats[mode.statVal].score[i].date_, date);
     }
@@ -259,7 +295,9 @@ void gameLostStatChange()
 {
     userStats[curUser].stats[mode.statVal].gamesPlayed++;
     userStats[curUser].stats[mode.statVal].currentWinning = 0;
-    if (++userStats[curUser].stats[mode.statVal].currentLosing > userStats[curUser].stats[mode.statVal].maxLosing) userStats[curUser].stats[mode.statVal].maxLosing++;
+    if (++userStats[curUser].stats[mode.statVal].currentLosing > userStats[curUser].stats[mode.statVal].maxLosing) {
+        userStats[curUser].stats[mode.statVal].maxLosing++;
+    }
     writeUserStats();
 }
 
@@ -271,15 +309,31 @@ void resetStat()
     userStats[curUser].stats[curStat].currentLosing = 0;
     userStats[curUser].stats[curStat].maxWinning = 0;
     userStats[curUser].stats[curStat].maxLosing = 0;
-    for (int i = 0; i < 5; i++) userStats[curUser].stats[curStat].score[i].score_ = __INT_MAX__;
+    for (int i = 0; i < 5; i++) {
+        userStats[curUser].stats[curStat].score[i].score_ = __INT_MAX__;
+    }
     writeUserStats();
 }
 
-void inGameTimer() { _time++; }
+void inGameTimer()
+{
+    _time++;
+}
 
-void Qpush(int n){ queue[back++] = n; }
-int Qpop() { return queue[front++]; }
-int Qsize() { return back - front; }
+void Qpush(int n)
+{
+    queue[back++] = n;
+}
+
+int Qpop()
+{
+    return queue[front++];
+}
+
+int Qsize()
+{
+    return back - front;
+}
 
 void bfs()
 {
@@ -338,7 +392,7 @@ void exitGame()
 {
     playSound(7);
     deleteBoard();
-    saveSettings();
+    saveAllData();
     freeUserData();
     if (music) Sleep(400); //to play exit sound
     exit(0);
@@ -378,7 +432,7 @@ void checkUserPassword()
             nameInd = passwordInd = 0;
             takingUserName = true, takingPassword = false;
             curUser = i;
-            getSettings();
+            getAllData();
             gameState = MAIN_MENU;
             break;
         }
@@ -472,4 +526,13 @@ void setupLogin()
     music = false;
     animation = false;
     autoChord = false;
+}
+
+void deleteUser()
+{
+    for (int i = incUser+1; i < userCount; i++) {
+        userStats[i-1] = userStats[i];
+        userList[i-1] = userList[i];
+    }
+    userCount--;
 }

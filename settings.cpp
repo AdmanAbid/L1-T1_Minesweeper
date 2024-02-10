@@ -78,6 +78,7 @@ const int newGameY = 490, resumeY = 570;
 const int homeX = 574, homeY = 5, homeW = 52;
 const int winX = 460, winY = 693;
 const int resetX = 540, resetY = 150;
+const int exitX = 490, exitY = 170, exitH = 50, exitW = 220;
 const int statX = 540, statY = 550, statH = 50, statW = 120, statP = 20;
 const int stat2X = 1030, stat2Y = 498, stat2P = 45;
 const int stat3X = 128, stat3Y = 452, stat3P = 45;
@@ -115,10 +116,10 @@ char str[50];
 char SOUND[10][50];
 char IMAGE[2][50][50];
 
-char name[100], password[100], password2[100];
 int nameInd = 0, passwordInd = 0;
-bool takingUserName = true, takingPassword = false;
 int userCount = 0, curUser = 0, incUser = 0;
+char name[100], password[100], password2[100];
+bool takingUserName = true, takingPassword = false;
 
 _cell **board = NULL;
 _userData *userList = NULL;
@@ -276,6 +277,8 @@ void initiateGame()
     strcpy(IMAGE[0][33], "Images/Light/logout.bmp");
     strcpy(IMAGE[0][34], "Images/Light/rightarrow.bmp");
     strcpy(IMAGE[0][35], "Images/Light/leftarrow.bmp");
+    strcpy(IMAGE[0][36], "Images/Light/delete.bmp");
+
 
     strcpy(IMAGE[1][0], "Images/Dark/background.bmp");
     strcpy(IMAGE[1][1], "Images/Dark/resume.bmp");
@@ -313,6 +316,7 @@ void initiateGame()
     strcpy(IMAGE[1][33], "Images/Dark/logout.bmp");
     strcpy(IMAGE[1][34], "Images/Dark/rightarrow.bmp");
     strcpy(IMAGE[1][35], "Images/Dark/leftarrow.bmp");
+    strcpy(IMAGE[1][36], "Images/Dark/delete.bmp");
 
 
     strcpy(SOUND[0], "Sounds/Chord.wav");

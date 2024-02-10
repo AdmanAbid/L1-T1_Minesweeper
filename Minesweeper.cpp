@@ -5,18 +5,18 @@
 bool leftClick, rightClick;
 
 void showStat();
-void showTimeAndMineLeft();
+void controlTimers();
 void showFInalTime();
 void showNum(int i, int j);
-void controlTimers();
+void showTimeAndMineLeft();
 
-void showLoginScreen();
-void showRegisterScreen();
 void showMainMenu();
 void showResumeMenu();
-void showStatisticsScreen();
+void showLoginScreen();
 void showNewGameScreen();
+void showRegisterScreen();
 void showSettingsScreen();
+void showStatisticsScreen();
 void showAboutScreen();
 void showInGameScreen();
 void showGameWonScreen();
@@ -281,7 +281,7 @@ void showStat()
     {
         if (userStats[curUser+incUser].stats[curStat].score[t].score_ == __INT_MAX__) break;
         sprintf(str, "%03d %30s", userStats[curUser+incUser].stats[curStat].score[t].score_, 
-                                userStats[curUser+incUser].stats[curStat].score[t].date_);
+                                  userStats[curUser+incUser].stats[curStat].score[t].date_);
         iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
     }
 
@@ -305,6 +305,7 @@ void showLoginScreen()
 {
     iShowBMP(0, 0, IMAGE[theme][29]); //login page
     iShowBMP(loginX, loginY, IMAGE[theme][32]); //register
+    iShowBMP(exitX, exitY, IMAGE[theme][6]); //exit
 
     if (takingUserName) {
         iShowBMP2(pointerX, pointerY1, IMAGE[theme][30], 0); //pointer
@@ -322,6 +323,7 @@ void showRegisterScreen()
 {
     iShowBMP(0, 0, IMAGE[theme][29]); //login page
     iShowBMP(loginX, loginY, IMAGE[theme][31]); //login
+    iShowBMP(exitX, exitY, IMAGE[theme][6]); //exit
 
     if (takingUserName) {
         iShowBMP2(pointerX, pointerY1, IMAGE[theme][30], 0); //pointer
@@ -366,8 +368,11 @@ void showStatisticsScreen()
     iShowBMP(statX-statW-statP, statY, IMAGE[theme][25]); //statEasy
     iShowBMP(statX+statW+statP, statY, IMAGE[theme][27]); //statHard
 
-    if(incUser == 0) {
+    if (incUser == 0) {
         iShowBMP(resetX, resetY, IMAGE[theme][14]); //reset
+    }
+    if (curUser == 0 && incUser != 0) {
+        iShowBMP(resetX, resetY, IMAGE[theme][36]); //delete
     }
     if (curUser+incUser > 0) {
         iShowBMP2(50, 650, IMAGE[theme][35], 0); //leftarrow
@@ -523,6 +528,9 @@ void simulateLogIn(int mx, int my)
     else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > passwordBoxY && my < passwordBoxY2) {
         takingPassword = true, takingUserName = false;
     }
+    else if (leftClick && mx > exitX && mx < exitX+exitW && my > exitY && my < exitY+exitH) {
+        exitGame();
+    }
 }
 
 void simulateRegister(int mx, int my)
@@ -541,6 +549,9 @@ void simulateRegister(int mx, int my)
     else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > passwordBoxY && my < passwordBoxY2) {
         takingPassword = true;
         takingUserName = false;
+    }
+    else if (leftClick && mx > exitX && mx < exitX+exitW && my > exitY && my < exitY+exitH) {
+        exitGame();
     }
 }
 
@@ -568,7 +579,7 @@ void simulateMainMenu(int mx, int my)
         exitGame();
     }
     else if (leftClick && mx > logoutX && mx < logoutX+logoutW && my > logoutY && my < logoutY+logoutH) {
-        saveSettings();
+        saveAllData();
         gameState = LOG_IN;
         playSound(7);
     }
@@ -602,7 +613,7 @@ void simulateResumeMenu(int mx, int my)
         exitGame();
     }
     else if (leftClick && mx > logoutX && mx < logoutX+logoutW && my > logoutY && my < logoutY+logoutH) {
-        saveSettings();
+        saveAllData();
         gameState = LOG_IN;
         playSound(7);
     }
@@ -661,6 +672,9 @@ void simulateStatistics(int mx, int my)
     else if (leftClick && curUser+incUser < userCount-1 && 
             mx > rightarrowX && mx < rightarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
         incUser++;
+    }
+    if (leftClick && curUser == 0 && incUser != 0 && mx > resetX && mx < resetX+statW && my > resetY && my < resetY+statH) {
+        deleteUser(); 
     }
 }
 
