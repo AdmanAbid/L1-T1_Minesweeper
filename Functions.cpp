@@ -29,13 +29,12 @@ int Qpop();
 int Qsize();
 void Qpush(int n);
 
-void readUserData();
-void freeUserData();
-void checkUserPassword();
 void addNewUser();
 void deleteUser();
+void checkUserPassword();
 
 void readUserData();
+void freeUserData();
 void writeUserData();
 
 void readUserStats();
@@ -398,24 +397,6 @@ void exitGame()
     exit(0);
 }
 
-void readUserData()
-{
-    free(userList);
-    FILE *fp = fopen("UserData.txt", "rb");
-    if (fp)
-    {
-        fread(&userCount, sizeof(int), 1, fp);
-        userList = (_userData *)malloc(sizeof(_userData) * (userCount+1));
-        fread(userList, sizeof(_userData), userCount, fp);
-        fclose(fp);
-    }
-    else
-    {
-        printf("Error opening file for reading.\n");
-        exit(1);
-    }
-}
-
 void freeUserData()
 {
     free(userList);
@@ -441,6 +422,10 @@ void checkUserPassword()
 
 void addNewUser()
 {
+    for (int i = 0; i < userCount; i++) {
+        if (!strcmp(name, userList[i]._name)) return; 
+    }
+
     strcpy(userList[userCount]._name, name);
     strcpy(userList[userCount]._password, password);
     curUser = userCount;
@@ -467,6 +452,24 @@ void addNewUser()
 
     readUserData();
     readUserStats();
+}
+
+void readUserData()
+{
+    free(userList);
+    FILE *fp = fopen("UserData.txt", "rb");
+    if (fp)
+    {
+        fread(&userCount, sizeof(int), 1, fp);
+        userList = (_userData *)malloc(sizeof(_userData) * (userCount+1));
+        fread(userList, sizeof(_userData), userCount, fp);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Error opening file for reading.\n");
+        exit(1);
+    }
 }
 
 void writeUserData()
@@ -535,4 +538,5 @@ void deleteUser()
         userList[i-1] = userList[i];
     }
     userCount--;
+    if (incUser > userCount-1) incUser--;
 }

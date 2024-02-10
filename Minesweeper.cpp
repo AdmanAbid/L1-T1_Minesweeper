@@ -6,7 +6,7 @@ bool leftClick, rightClick;
 
 void showStat();
 void controlTimers();
-void showFInalTime();
+void showFinalTime();
 void showNum(int i, int j);
 void showTimeAndMineLeft();
 
@@ -194,101 +194,6 @@ int main(int argc, char **argv)
     return 0;
 }
 
-void showNum(int i, int j)
-{
-    switch(board[i][j].num)
-    {
-        case 0:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][4]);
-            break;
-        case 1:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][5]);
-            break;
-        case 2:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][6]);
-            break;
-        case 3:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][7]);
-            break;
-        case 4:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][8]);
-            break;
-        case 5:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][9]);
-            break;
-        case 6:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][10]);
-            break;
-        case 7:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][11]);
-            break;
-        case 8:
-            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][12]);
-            break;
-    }
-}
-
-void showTimeAndMineLeft()
-{
-    if (theme == 0) iSetColor(0, 0, 255);
-    else iSetColor(255, 255, 255);
-
-    sprintf(str, "Mine: %d", mode.mines-flagged);
-    iText(text1X, text1Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
-
-    sprintf(str, "Time: %d", _time);
-    iText(text2X, text2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
-}
-
-void showFInalTime()
-{
-    if (theme == 0) iSetColor(0, 0, 255);
-    else iSetColor(255, 255, 255);
-
-    sprintf(str, "Time: %d", _time);
-    iText(text2X, text2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
-}
-
-void showStat()
-{
-    iSetColor(0, 0, 0);
-
-    iText(nameBox2X, nameBox2Y, userList[curUser+incUser]._name, GLUT_BITMAP_TIMES_ROMAN_24);
-
-    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].gamesPlayed);
-    iText(stat2X, stat2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
-
-    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].gamesWon);
-    iText(stat2X, stat2Y-stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
-
-    int t = 0;
-    if (userStats[curUser+incUser].stats[curStat].gamesPlayed) {
-        t = userStats[curUser+incUser].stats[curStat].gamesWon*100 / userStats[curUser+incUser].stats[curStat].gamesPlayed;
-    }
-    sprintf(str, "%03d", t);
-    iText(stat2X, stat2Y-2*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
-
-    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].maxWinning);
-    iText(stat2X, stat2Y-3*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
-
-    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].maxLosing);
-    iText(stat2X, stat2Y-4*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
-
-    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].currentWinning);
-    iText(stat2X, stat2Y-5*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
-
-    for (t = 0; t < 5; t++)
-    {
-        if (userStats[curUser+incUser].stats[curStat].score[t].score_ == __INT_MAX__) break;
-        sprintf(str, "%03d %30s", userStats[curUser+incUser].stats[curStat].score[t].score_, 
-                                  userStats[curUser+incUser].stats[curStat].score[t].date_);
-        iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
-    }
-
-    sprintf(str, "---                 ------------");
-    for (; t < 5; t++) iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
-}
-
 void controlTimers()
 {
     if (gameState == IN_GAME) iResumeTimer(t1);
@@ -344,8 +249,8 @@ void showMainMenu()
     iShowBMP(menuX, menuY - 2*menuH - menuP, IMAGE[theme][3]); //settings
     iShowBMP(menuX, menuY - 3*menuH - 2*menuP, IMAGE[theme][4]); //stats
     iShowBMP(menuX, menuY - 4*menuH - 3*menuP, IMAGE[theme][5]); //about
-    iShowBMP(menuX, menuY - 5*menuH - 4*menuP, IMAGE[theme][6]); //exit
-    iShowBMP(logoutX, logoutY, IMAGE[theme][33]); //logout
+    iShowBMP(menuX, menuY - 5*menuH - 4*menuP, IMAGE[theme][33]); //logout
+    iShowBMP(menuX, menuY - 6*menuH - 5*menuP, IMAGE[theme][6]); //exit
 }
 
 void showResumeMenu()
@@ -356,8 +261,8 @@ void showResumeMenu()
     iShowBMP(menuX, resumeY - 3*menuH - 2*menuP, IMAGE[theme][3]); //settings
     iShowBMP(menuX, resumeY - 4*menuH - 3*menuP, IMAGE[theme][4]); //stats
     iShowBMP(menuX, resumeY - 5*menuH - 4*menuP, IMAGE[theme][5]); //about
-    iShowBMP(menuX, resumeY - 6*menuH - 5*menuP, IMAGE[theme][6]); //exit
-    iShowBMP(logoutX, logoutY, IMAGE[theme][33]); //logout
+    iShowBMP(menuX, resumeY - 6*menuH - 5*menuP, IMAGE[theme][33]); //logout
+    iShowBMP(menuX, resumeY - 7*menuH - 6*menuP, IMAGE[theme][6]); //exit
 }
 
 void showStatisticsScreen()
@@ -453,7 +358,7 @@ void showGameWonScreen()
 {
     iShowBMP(0, 0, IMAGE[theme][0]); //background
     iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
-    showFInalTime();
+    showFinalTime();
 
     for (int i = 0; i < mode.col; i++)
     {
@@ -511,7 +416,6 @@ void showGameLostScreen()
         }
     }
 }
-
 
 void simulateLogIn(int mx, int my)
 {
@@ -576,12 +480,12 @@ void simulateMainMenu(int mx, int my)
         playSound(7);
     }
     else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-4*menuH-4*menuP && my > menuY-5*menuH-4*menuP) {
-        exitGame();
-    }
-    else if (leftClick && mx > logoutX && mx < logoutX+logoutW && my > logoutY && my < logoutY+logoutH) {
         saveAllData();
         gameState = LOG_IN;
         playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < menuY-5*menuH-5*menuP && my > menuY-6*menuH-5*menuP) {
+        exitGame();
     }
 }
 
@@ -610,12 +514,12 @@ void simulateResumeMenu(int mx, int my)
         playSound(7);
     }
     else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-5*menuH-5*menuP && my > resumeY-6*menuH-5*menuP) {
-        exitGame();
-    }
-    else if (leftClick && mx > logoutX && mx < logoutX+logoutW && my > logoutY && my < logoutY+logoutH) {
         saveAllData();
         gameState = LOG_IN;
         playSound(7);
+    }
+    else if (leftClick && mx > menuX && mx < menuX+menuW && my < resumeY-6*menuH-6*menuP && my > resumeY-7*menuH-6*menuP) {
+        exitGame();
     }
 }
 
@@ -723,4 +627,99 @@ void simulateGameOver(int mx, int my)
         gameState = MAIN_MENU;
         playSound(7);
     }
+}
+
+void showNum(int i, int j)
+{
+    switch(board[i][j].num)
+    {
+        case 0:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][4]);
+            break;
+        case 1:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][5]);
+            break;
+        case 2:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][6]);
+            break;
+        case 3:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][7]);
+            break;
+        case 4:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][8]);
+            break;
+        case 5:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][9]);
+            break;
+        case 6:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][10]);
+            break;
+        case 7:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][11]);
+            break;
+        case 8:
+            iShowBMP(mode.x+mode.w*i, mode.y+mode.w*j, mode.image[theme][12]);
+            break;
+    }
+}
+
+void showTimeAndMineLeft()
+{
+    if (theme == 0) iSetColor(0, 0, 255);
+    else iSetColor(255, 255, 255);
+
+    sprintf(str, "Mine: %d", mode.mines-flagged);
+    iText(text1X, text1Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    sprintf(str, "Time: %d", _time);
+    iText(text2X, text2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
+}
+
+void showFinalTime()
+{
+    if (theme == 0) iSetColor(0, 0, 255);
+    else iSetColor(255, 255, 255);
+
+    sprintf(str, "Time: %d", _time);
+    iText(text2X, text2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
+}
+
+void showStat()
+{
+    iSetColor(0, 0, 0);
+
+    iText(nameBox2X, nameBox2Y, userList[curUser+incUser]._name, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].gamesPlayed);
+    iText(stat2X, stat2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].gamesWon);
+    iText(stat2X, stat2Y-stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    int t = 0;
+    if (userStats[curUser+incUser].stats[curStat].gamesPlayed) {
+        t = userStats[curUser+incUser].stats[curStat].gamesWon*100 / userStats[curUser+incUser].stats[curStat].gamesPlayed;
+    }
+    sprintf(str, "%03d", t);
+    iText(stat2X, stat2Y-2*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].maxWinning);
+    iText(stat2X, stat2Y-3*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].maxLosing);
+    iText(stat2X, stat2Y-4*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].currentWinning);
+    iText(stat2X, stat2Y-5*stat2P, str, GLUT_BITMAP_TIMES_ROMAN_24);
+
+    for (t = 0; t < 5; t++)
+    {
+        if (userStats[curUser+incUser].stats[curStat].score[t].score_ == __INT_MAX__) break;
+        sprintf(str, "%03d %30s", userStats[curUser+incUser].stats[curStat].score[t].score_, 
+                                  userStats[curUser+incUser].stats[curStat].score[t].date_);
+        iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
+    }
+
+    sprintf(str, "---                 ------------");
+    for (; t < 5; t++) iText(stat3X, stat3Y-t*stat3P, str, GLUT_BITMAP_TIMES_ROMAN_24);
 }

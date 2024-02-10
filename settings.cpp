@@ -72,9 +72,9 @@ struct _cell
 
 
 const int screenWidth = 1200, screenHeight = 750;
-const int menuX = 490, menuY = 525, menuH = 50, menuW = 220, menuP = 10;
+const int menuX = 490, menuY = 560, menuH = 50, menuW = 220, menuP = 10;
 const int text1X = 130, text1Y = 710, text2X = 1025, text2Y = 710;
-const int newGameY = 490, resumeY = 570;
+const int newGameY = 490, resumeY = 600;
 const int homeX = 574, homeY = 5, homeW = 52;
 const int winX = 460, winY = 693;
 const int resetX = 540, resetY = 150;
@@ -87,7 +87,6 @@ const int loginX = 490, loginY = 550, loginH = 50, loginW = 220;
 const int pointerX = 840, pointerY1 = 393, pointerY2 = 318;
 const int nameX = 540, nameY = 400;
 const int passwordX = 540, passwordY = 320;
-const int logoutX = 1025, logoutY = 75, logoutH = 50, logoutW = 160;
 const int nameBoxX = 528, nameBoxX2 = 835, nameBoxY = 385, nameBoxY2 = 435;
 const int passwordBoxY = 310, passwordBoxY2 = 360;
 const int leftarrowX = 50, rightarrowX = 1100, arrowY = 650, arrowW = 50;
@@ -114,7 +113,7 @@ int t3 = iSetTimer(500, winAnimation);
 
 char str[50];
 char SOUND[10][50];
-char IMAGE[2][50][50];
+char IMAGE[2][40][50];
 
 int nameInd = 0, passwordInd = 0;
 int userCount = 0, curUser = 0, incUser = 0;
