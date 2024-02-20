@@ -93,7 +93,7 @@ const int nameBox2X = 450, nameBox2Y = 662;
 const int loginX = 410, loginY = 550, loginH = 50, loginW = 180;
 const int registerX = 610, registerY = 550;
 const int dot1X = 490, dot2X = 690, dot1Y = 608;
-const int dotS1X = 450, dotS2X = 590, dotS3X = 730, dotSY = 610;
+const int dotS1X = 450, dotS2X = 590, dotS3X = 730, dotSY = 607;
 
 int _time = 0, curStat = 0;
 int flagged = 0, exposed = 0;
@@ -280,6 +280,7 @@ void initiateGame()
     strcpy(IMAGE[0][34], "Images/Light/rightarrow.bmp");
     strcpy(IMAGE[0][35], "Images/Light/leftarrow.bmp");
     strcpy(IMAGE[0][36], "Images/Light/delete.bmp");
+    strcpy(IMAGE[0][37], "Images/Light/dot.bmp");
 
 
     strcpy(IMAGE[1][0], "Images/Dark/background.bmp");

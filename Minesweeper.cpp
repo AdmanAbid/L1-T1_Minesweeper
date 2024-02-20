@@ -540,19 +540,19 @@ void simulateSettings(int mx, int my)
         gameState = (canResume ? RESUME_MENU : MAIN_MENU);
         playSound(7);
     }
-    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY && my > menuY-menuH) {
+    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY && my > setY-setH) {
         theme = 1-theme;
         playSound(7);
     }
-    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-setH-setP && my > menuY-2*menuH-setP) {
+    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-setH-setP && my > setY-2*setH-setP) {
         music = !music;
         playSound(7);
     }
-    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-2*setH-2*setP && my > menuY-3*menuH-2*setP) {
+    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-2*setH-2*setP && my > setY-3*setH-2*setP) {
         autoChord = !autoChord;
         playSound(7);
     }
-    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-3*setH-3*setP && my > menuY-4*menuH-3*setP) {
+    else if (leftClick && mx > setX2 && mx < setX2+setW && my < setY-3*setH-3*setP && my > setY-4*setH-3*setP) {
         animation = !animation;
         playSound(7);
     }
