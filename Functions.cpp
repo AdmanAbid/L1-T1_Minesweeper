@@ -47,6 +47,8 @@ void generateMines();
 void setup(_difficulty *mode_)
 {
     playSound(6);
+    deleteBoard();
+
     mode = *mode_;
     firstClick = true;
     rowCount = mode.row;
@@ -64,8 +66,6 @@ void setup(_difficulty *mode_)
 
 void generateBoard()
 {
-    deleteBoard();
-
     board = (_cell **)malloc(mode.col * sizeof(_cell *));
     for (int i = 0; i < mode.col; i++) {
         board[i] = (_cell *)malloc(mode.row * sizeof(_cell));
