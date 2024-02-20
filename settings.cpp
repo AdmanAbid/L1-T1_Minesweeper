@@ -83,14 +83,17 @@ const int statX = 540, statY = 550, statH = 50, statW = 120, statP = 20;
 const int stat2X = 1030, stat2Y = 498, stat2P = 45;
 const int stat3X = 128, stat3Y = 452, stat3P = 45;
 const int setX = 325, setX2 = 725, setY = 520, setP = 10, setH = 50, setW = 150;
-const int loginX = 490, loginY = 550, loginH = 50, loginW = 220;
 const int pointerX = 840, pointerY1 = 393, pointerY2 = 318;
 const int nameX = 540, nameY = 400;
 const int passwordX = 540, passwordY = 320;
 const int nameBoxX = 528, nameBoxX2 = 835, nameBoxY = 385, nameBoxY2 = 435;
 const int passwordBoxY = 310, passwordBoxY2 = 360;
 const int leftarrowX = 50, rightarrowX = 1100, arrowY = 650, arrowW = 50;
-const int nameBox2X = 570, nameBox2Y = 662;
+const int nameBox2X = 450, nameBox2Y = 662;
+const int loginX = 410, loginY = 550, loginH = 50, loginW = 180;
+const int registerX = 610, registerY = 550;
+const int dot1X = 490, dot2X = 690, dot1Y = 608;
+const int dotS1X = 450, dotS2X = 590, dotS3X = 730, dotSY = 610;
 
 int _time = 0, curStat = 0;
 int flagged = 0, exposed = 0;
@@ -316,6 +319,7 @@ void initiateGame()
     strcpy(IMAGE[1][34], "Images/Dark/rightarrow.bmp");
     strcpy(IMAGE[1][35], "Images/Dark/leftarrow.bmp");
     strcpy(IMAGE[1][36], "Images/Dark/delete.bmp");
+    strcpy(IMAGE[1][37], "Images/Dark/dot.bmp");
 
 
     strcpy(SOUND[0], "Sounds/Chord.wav");

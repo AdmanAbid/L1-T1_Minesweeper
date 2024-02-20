@@ -209,8 +209,10 @@ void controlTimers()
 void showLoginScreen()
 {
     iShowBMP(0, 0, IMAGE[theme][29]); //login page
-    iShowBMP(loginX, loginY, IMAGE[theme][32]); //register
+    iShowBMP(loginX, loginY, IMAGE[theme][31]); //register
+    iShowBMP(registerX, registerY, IMAGE[theme][32]); //register
     iShowBMP(exitX, exitY, IMAGE[theme][6]); //exit
+    iShowBMP2(dot1X, dot1Y, IMAGE[theme][37], 0); // dot
 
     if (takingUserName) {
         iShowBMP2(pointerX, pointerY1, IMAGE[theme][30], 0); //pointer
@@ -228,7 +230,9 @@ void showRegisterScreen()
 {
     iShowBMP(0, 0, IMAGE[theme][29]); //login page
     iShowBMP(loginX, loginY, IMAGE[theme][31]); //login
+    iShowBMP(registerX, registerY, IMAGE[theme][32]); //register
     iShowBMP(exitX, exitY, IMAGE[theme][6]); //exit
+    iShowBMP2(dot2X, dot1Y, IMAGE[theme][37], 0); // dot
 
     if (takingUserName) {
         iShowBMP2(pointerX, pointerY1, IMAGE[theme][30], 0); //pointer
@@ -272,6 +276,13 @@ void showStatisticsScreen()
     iShowBMP(statX, statY, IMAGE[theme][26]); //statMedium
     iShowBMP(statX-statW-statP, statY, IMAGE[theme][25]); //statEasy
     iShowBMP(statX+statW+statP, statY, IMAGE[theme][27]); //statHard
+
+    int dotx;
+    if (curStat == 0) dotx = dotS1X;
+    else if (curStat == 1) dotx = dotS2X;
+    else dotx = dotS3X;
+
+    iShowBMP2(dotx, dotSY, IMAGE[theme][37], 0); // dot
 
     if (incUser == 0) {
         iShowBMP(resetX, resetY, IMAGE[theme][14]); //reset
@@ -419,7 +430,7 @@ void showGameLostScreen()
 
 void simulateLogIn(int mx, int my)
 {
-    if (leftClick && mx > loginX && mx < loginX+loginW && my > loginY && my < loginY+loginH) {
+    if (leftClick && mx > registerX && mx < registerX+loginW && my > registerY && my < registerY+loginH) {
         name[0] = password[0] = password2[0] = 0;
         nameInd = passwordInd = 0;
         takingUserName = true;
@@ -688,7 +699,10 @@ void showStat()
 {
     iSetColor(0, 0, 0);
 
-    iText(nameBox2X, nameBox2Y, userList[curUser+incUser]._name, GLUT_BITMAP_TIMES_ROMAN_24);
+    int len = strlen(userList[curUser+incUser]._name);
+    int Dx = (12.0 - (len / 2.0)) * 12.5;
+
+    iText(nameBox2X + Dx, nameBox2Y, userList[curUser+incUser]._name, GLUT_BITMAP_TIMES_ROMAN_24);
 
     sprintf(str, "%03d", userStats[curUser+incUser].stats[curStat].gamesPlayed);
     iText(stat2X, stat2Y, str, GLUT_BITMAP_TIMES_ROMAN_24);
