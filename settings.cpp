@@ -94,6 +94,7 @@ const int loginX = 410, loginY = 550, loginH = 50, loginW = 180;
 const int registerX = 610, registerY = 550;
 const int dot1X = 490, dot2X = 690, dot1Y = 608;
 const int dotS1X = 450, dotS2X = 590, dotS3X = 730, dotSY = 607;
+const int wrongInpX = 370, wrongInpY = 635;
 
 int _time = 0, curStat = 0;
 int flagged = 0, exposed = 0;
@@ -121,7 +122,7 @@ char IMAGE[2][40][50];
 int nameInd = 0, passwordInd = 0;
 int userCount = 0, curUser = 0, incUser = 0;
 char name[100], password[100], password2[100];
-bool takingUserName = true, takingPassword = false;
+bool takingUserName = true, takingPassword = false, wrongInput = false;
 
 _cell **board = NULL;
 _userData *userList = NULL;
@@ -281,6 +282,7 @@ void initiateGame()
     strcpy(IMAGE[0][35], "Images/Light/leftarrow.bmp");
     strcpy(IMAGE[0][36], "Images/Light/delete.bmp");
     strcpy(IMAGE[0][37], "Images/Light/dot.bmp");
+    strcpy(IMAGE[0][38], "Images/Light/wronginput.bmp");
 
 
     strcpy(IMAGE[1][0], "Images/Dark/background.bmp");
@@ -321,6 +323,7 @@ void initiateGame()
     strcpy(IMAGE[1][35], "Images/Dark/leftarrow.bmp");
     strcpy(IMAGE[1][36], "Images/Dark/delete.bmp");
     strcpy(IMAGE[1][37], "Images/Dark/dot.bmp");
+    strcpy(IMAGE[1][38], "Images/Dark/wronginput.bmp");
 
 
     strcpy(SOUND[0], "Sounds/Chord.wav");

@@ -220,6 +220,9 @@ void showLoginScreen()
     if (takingPassword) {
         iShowBMP2(pointerX, pointerY2, IMAGE[theme][30], 0); //pointer
     }
+    if (wrongInput) {
+        iShowBMP(wrongInpX, wrongInpY, IMAGE[theme][38]); // wrong input
+    }
 
     iSetColor(0, 0, 0);
     iText(nameX, nameY, name, GLUT_BITMAP_TIMES_ROMAN_24);
@@ -239,6 +242,9 @@ void showRegisterScreen()
     }
     if (takingPassword) {
         iShowBMP2(pointerX, pointerY2, IMAGE[theme][30], 0); //pointer
+    }
+    if (wrongInput) {
+        iShowBMP(wrongInpX, wrongInpY, IMAGE[theme][38]); // wrong input
     }
 
     iSetColor(0, 0, 0);
@@ -435,6 +441,7 @@ void simulateLogIn(int mx, int my)
         nameInd = passwordInd = 0;
         takingUserName = true;
         takingPassword = false;
+        wrongInput = false;
         gameState = REGISTER;
     }
     else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > nameBoxY && my < nameBoxY2) {
@@ -455,6 +462,7 @@ void simulateRegister(int mx, int my)
         nameInd = passwordInd = 0;
         takingUserName = true;
         takingPassword = false;
+        wrongInput = false;
         gameState = LOG_IN;
     }
     else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > nameBoxY && my < nameBoxY2) {

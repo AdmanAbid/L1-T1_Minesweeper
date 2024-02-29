@@ -405,6 +405,7 @@ void freeUserData()
 
 void checkUserPassword()
 {
+    bool flag = true;
     for (int i = 0; i < userCount; i++)
     {
         if (!strcmp(name, userList[i]._name) && !strcmp(password, userList[i]._password))
@@ -415,15 +416,21 @@ void checkUserPassword()
             curUser = i;
             getAllData();
             gameState = MAIN_MENU;
+            wrongInput = false;
+            flag = false;
             break;
         }
     }
+    if (flag) wrongInput = true;
 }
 
 void addNewUser()
 {
     for (int i = 0; i < userCount; i++) {
-        if (!strcmp(name, userList[i]._name)) return; 
+        if (!strcmp(name, userList[i]._name)) {
+            wrongInput = true;
+            return; 
+        }
     }
 
     strcpy(userList[userCount]._name, name);
@@ -446,6 +453,7 @@ void addNewUser()
     name[0] = password[0] = password2[0] = 0;
     nameInd = passwordInd = 0;
     takingUserName = true, takingPassword = false;
+    wrongInput = false;
 
     writeUserData();
     writeUserStats();
