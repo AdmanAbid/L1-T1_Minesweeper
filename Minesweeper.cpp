@@ -297,10 +297,10 @@ void showStatisticsScreen()
         iShowBMP(resetX, resetY, IMAGE[theme][36]); //delete
     }
     if (curUser+incUser > 0) {
-        iShowBMP2(50, 650, IMAGE[theme][35], 0); //leftarrow
+        iShowBMP2(leftarrowX, arrowY, IMAGE[theme][35], 0); //leftarrow
     }
     if (curUser+incUser < userCount-1) {
-        iShowBMP2(1100, 650, IMAGE[theme][34], 0); //rightarrow
+        iShowBMP2(rightarrowX, arrowY, IMAGE[theme][34], 0); //rightarrow
     }
 
     showStat();
@@ -344,7 +344,25 @@ void showSettingsScreen()
 
 void showAboutScreen()
 {
-    iShowBMP(0, 0, IMAGE[theme][28]); //aboutScreen
+    // iShowBMP(0, 0, IMAGE[theme][28]); //aboutScreen
+    switch (incAbout)
+    {
+    case 0:
+        iShowBMP(0, 0, IMAGE[theme][39]); //about1
+        break;
+    case 1:
+        iShowBMP(0, 0, IMAGE[theme][40]); //about2
+        break;
+    case 2:
+        iShowBMP(0, 0, IMAGE[theme][41]); //about3
+        break;
+    }
+    if (incAbout > 0) {
+        iShowBMP2(leftarrowX, arrowY, IMAGE[theme][35], 0); //leftarrow
+    }
+    if (incAbout < 2) {
+        iShowBMP2(rightarrowX, arrowY, IMAGE[theme][34], 0); //rightarrow
+    }
     iShowBMP(homeX, homeY, IMAGE[theme][13]); //home
 }
 
@@ -605,7 +623,16 @@ void simulateAbout(int mx, int my)
 {
     if (leftClick && mx > homeX && mx < homeX+homeW && my > homeY && my < homeY+homeW) {
         gameState = (canResume ? RESUME_MENU : MAIN_MENU);
+        incAbout = 0;
         playSound(7);
+    }
+    else if (leftClick && incAbout > 0 && 
+            mx > leftarrowX && mx < leftarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
+        incAbout--;
+    }
+    else if (leftClick && incAbout < 2 && 
+            mx > rightarrowX && mx < rightarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
+        incAbout++;
     }
 }
 

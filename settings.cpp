@@ -117,8 +117,9 @@ int t3 = iSetTimer(500, winAnimation);
 
 char str[50];
 char SOUND[10][50];
-char IMAGE[2][40][50];
+char IMAGE[2][45][50];
 
+int incAbout = 0;
 int nameInd = 0, passwordInd = 0;
 int userCount = 0, curUser = 0, incUser = 0;
 char name[100], password[100], password2[100];
@@ -283,6 +284,9 @@ void initiateGame()
     strcpy(IMAGE[0][36], "Images/Light/delete.bmp");
     strcpy(IMAGE[0][37], "Images/Light/dot.bmp");
     strcpy(IMAGE[0][38], "Images/Light/wronginput.bmp");
+    strcpy(IMAGE[0][39], "Images/Light/about1.bmp");
+    strcpy(IMAGE[0][40], "Images/Light/about2.bmp");
+    strcpy(IMAGE[0][41], "Images/Light/about3.bmp");
 
 
     strcpy(IMAGE[1][0], "Images/Dark/background.bmp");
@@ -324,6 +328,9 @@ void initiateGame()
     strcpy(IMAGE[1][36], "Images/Dark/delete.bmp");
     strcpy(IMAGE[1][37], "Images/Dark/dot.bmp");
     strcpy(IMAGE[1][38], "Images/Dark/wronginput.bmp");
+    strcpy(IMAGE[1][39], "Images/Dark/about1.bmp");
+    strcpy(IMAGE[1][40], "Images/Dark/about2.bmp");
+    strcpy(IMAGE[1][41], "Images/Dark/about3.bmp");
 
 
     strcpy(SOUND[0], "Sounds/Chord.wav");
