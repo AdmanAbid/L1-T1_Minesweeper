@@ -344,7 +344,6 @@ void showSettingsScreen()
 
 void showAboutScreen()
 {
-    // iShowBMP(0, 0, IMAGE[theme][28]); //aboutScreen
     switch (incAbout)
     {
     case 0:
