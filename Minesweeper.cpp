@@ -460,12 +460,15 @@ void simulateLogIn(int mx, int my)
         takingPassword = false;
         wrongInput = false;
         gameState = REGISTER;
+        playSound(7);
     }
     else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > nameBoxY && my < nameBoxY2) {
         takingUserName = true, takingPassword = false;
+        playSound(7);
     }
     else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > passwordBoxY && my < passwordBoxY2) {
         takingPassword = true, takingUserName = false;
+        playSound(7);
     }
     else if (leftClick && mx > exitX && mx < exitX+exitW && my > exitY && my < exitY+exitH) {
         exitGame();
@@ -481,14 +484,17 @@ void simulateRegister(int mx, int my)
         takingPassword = false;
         wrongInput = false;
         gameState = LOG_IN;
+        playSound(7);
     }
     else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > nameBoxY && my < nameBoxY2) {
         takingUserName = true;
         takingPassword = false;
+        playSound(7);
     }
     else if (leftClick && mx > nameBoxX && mx < nameBoxX2 && my > passwordBoxY && my < passwordBoxY2) {
         takingPassword = true;
         takingUserName = false;
+        playSound(7);
     }
     else if (leftClick && mx > exitX && mx < exitX+exitW && my > exitY && my < exitY+exitH) {
         exitGame();
@@ -608,10 +614,12 @@ void simulateStatistics(int mx, int my)
     else if (leftClick && curUser+incUser > 0 && 
             mx > leftarrowX && mx < leftarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
         incUser--;
+        playSound(7);
     }
     else if (leftClick && curUser+incUser < userCount-1 && 
             mx > rightarrowX && mx < rightarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
         incUser++;
+        playSound(7);
     }
     if (leftClick && curUser == 0 && incUser != 0 && mx > resetX && mx < resetX+statW && my > resetY && my < resetY+statH) {
         deleteUser(); 
@@ -628,10 +636,12 @@ void simulateAbout(int mx, int my)
     else if (leftClick && incAbout > 0 && 
             mx > leftarrowX && mx < leftarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
         incAbout--;
+        playSound(7);
     }
     else if (leftClick && incAbout < 2 && 
             mx > rightarrowX && mx < rightarrowX+arrowW && my > arrowY && my < arrowY+arrowW) {
         incAbout++;
+        playSound(7);
     }
 }
 
